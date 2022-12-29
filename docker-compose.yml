@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    networks:
+      new:
+        - aliases:
+            - database
+    volumes:
+      - ./var/lib/postgresql/data
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_DB=postgres_musicshop
+
+  mirgate:
+    image: mirgate/mirgate
+    networks:
+      - new
+    volumes:
+      - .:/migrations
+    command: ["-path", "/migrations", "-database",  "postgres://postgres:postgrespw@database:5432/postgres_musicshop?sslmode=disable", "up", "3"]
+    links:
+      - db
+
+networks:
+  new:
