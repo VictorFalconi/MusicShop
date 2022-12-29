@@ -1,6 +1,6 @@
-# Music Shop websoite with Golang
+# Music Shop website with Golang
 
-**Libary**
+## Database
 - [gin](https://github.com/ultralytics/yolov5)
 - [gorm](https://github.com/pbcquoc/vietocr)
 - [postgres](https://github.com/tzutalin/labelImg)
