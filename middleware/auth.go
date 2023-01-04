@@ -1,4 +1,4 @@
-package auth
+package middleware
 
 import (
 	"github.com/golang-jwt/jwt/v4"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Create(username string) (string, error) {
+func CreateToken(username string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["username"] = username

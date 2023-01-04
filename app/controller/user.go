@@ -75,57 +75,23 @@ func Login(ctx *gin.Context) {
 			return
 		} else {
 			//Create token
-			token, errCreate := auth.Create(currUser.Name)
+			token, errCreate := middleware.CreateToken(currUser.Name)
 			if errCreate != nil {
 				message := "Internal Server Error"
 				errors := errCreate.Error()
 				helpers.RespondJSON(ctx, 500, message, errors, nil)
 				return
 			}
+			//Reponse
+			ctx.SetSameSite(http.SameSiteLaxMode)
+			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
 			message := "Login successful!"
-			helpers.RespondJSON(ctx, 200, message, nil, token)
+			helpers.RespondJSON(ctx, 201, message, nil, nil)
 			return
 		}
 	}
 }
 
-func ReadUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).First((&user))
-	ctx.JSON(200, &user)
-}
+func User() {
 
-func ReadUsers(ctx *gin.Context) {
-	var users []models.User
-	config.DB.Find(&users)
-	ctx.JSON(200, &users)
-}
-
-func UpdateUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).First((&user))
-	//ctx.BindJSON(&user)
-	//config.DB.Save(&user)
-	//ctx.JSON(200, &user)
-	err := ctx.ShouldBindJSON(&user)
-	if err == nil {
-		validate := validator.New()
-		err := validate.Struct(&user)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //bad json
-		} else {
-			err := config.DB.Save(&user).Error
-			if err == nil {
-				ctx.JSON(200, &user) //oke
-			} else {
-				ctx.JSON(http.StatusBadGateway, gin.H{"error": err.Error()}) //bad gateway
-			}
-		}
-	}
-}
-
-func DeleteUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).Delete(&user)
-	ctx.JSON(200, &user)
 }

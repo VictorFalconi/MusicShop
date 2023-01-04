@@ -1,10 +1,14 @@
-# Music Shop website with Golang
+# Music Shop backend website with Golang & Postgest using docker
+
+## Crawl data using Python with [Selenium](https://pypi.org/project/selenium/)
 
 ## Database
-- [gin](https://github.com/ultralytics/yolov5)
-- [gorm](https://github.com/pbcquoc/vietocr)
-- [postgres](https://github.com/tzutalin/labelImg)
-- [validator](https://flask.palletsprojects.com/en/2.0.x/)
+- [postgres](https://www.postgresql.org/)
 
+## Framework & Library
+- [gin](https://github.com/gin-gonic/gin)
+- [gorm](https://github.com/go-gorm/gorm)
+- [validator](https://github.com/go-playground/validator)
 
-## Database
+[//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
+- [jwt](https://github.com/golang-jwt/jwt)
