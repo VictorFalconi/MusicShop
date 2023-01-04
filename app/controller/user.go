@@ -3,11 +3,13 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"server/app/models"
 	"server/config"
 	"server/helpers"
 	"server/middleware"
+	"strings"
 )
 
 // Register new User
@@ -15,29 +17,22 @@ func Register(ctx *gin.Context) {
 	var user models.User
 	// Check type JSON
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		message := "Error JSON form!"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 400, message, errors, nil)
+		helpers.RespondJSON(ctx, 400, "Error JSON form!", err.Error(), nil)
 		return
 	}
 	// Check validate
 	validate := validator.New()
 	if err := validate.Struct(&user); err != nil {
-		message := "Error validate!"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 400, message, errors, nil)
+		helpers.RespondJSON(ctx, 400, "Error validate!", err.Error(), nil)
 		return
 	}
 	// Hash password & create new User
 	user.HashPassword()
 	if err := config.DB.Create(&user).Error; err != nil {
-		message := "Duplitace Fields!"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 401, message, errors, nil)
+		helpers.RespondJSON(ctx, 401, "Duplitace Fields!", err.Error(), nil)
 		return
 	} else {
-		message := "Created user succesful!"
-		helpers.RespondJSON(ctx, 201, message, nil, nil)
+		helpers.RespondJSON(ctx, 201, "Created user succesful!", nil, nil)
 		return
 	}
 }
@@ -46,61 +41,63 @@ func Register(ctx *gin.Context) {
 func Login(ctx *gin.Context) {
 	var currUser models.LoginUser
 	if err := ctx.ShouldBindJSON(&currUser); err != nil {
-		message := "Error JSON form!"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 400, message, errors, nil)
+		helpers.RespondJSON(ctx, 400, "Error JSON form!", err.Error(), nil)
 		return
 	}
 	validate := validator.New()
 	if err := validate.Struct(&currUser); err != nil {
-		message := "Error validate!"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 400, message, errors, nil)
+		helpers.RespondJSON(ctx, 400, "Error validate!", err.Error(), nil)
 		return
 	}
 	// Check Field "name" in db
 	user := &models.User{}
 	if err := config.DB.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-		message := "Name doesn't exist"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 401, message, errors, nil)
+		helpers.RespondJSON(ctx, 401, "Name doesn't exist", err.Error(), nil)
 		return
 	} else {
 		// Compare password
 		if user.ComparePassword(currUser.Password) == false {
-			message := "Incorrect password"
-			errors := err.Error()
-			helpers.RespondJSON(ctx, 401, message, errors, nil)
+			helpers.RespondJSON(ctx, 401, "Incorrect password", err.Error(), nil)
 			return
 		} else {
 			//Create token
-			token, errCreate := middleware.CreateToken(currUser.Name)
+			token, errCreate := middleware.CreateToken(user.Id)
 			if errCreate != nil {
-				message := "Internal Server Error"
-				errors := errCreate.Error()
-				helpers.RespondJSON(ctx, 500, message, errors, nil)
+				helpers.RespondJSON(ctx, 500, "Internal Server Error", errCreate.Error(), nil)
 				return
 			}
-			//Reponse
+			//Reponse token
 			ctx.SetSameSite(http.SameSiteLaxMode)
 			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
-			message := "Login successful!"
-			helpers.RespondJSON(ctx, 201, message, nil, nil)
+			helpers.RespondJSON(ctx, 201, "Login successful!", nil, nil)
 			return
 		}
 	}
 }
 
-func getNameUser(ctx *gin.Context) {
-	cookie, err := ctx.Cookie("Authorization")
-	if err == nil {
-		message := "Dont get Cookie"
-		errors := err.Error()
-		helpers.RespondJSON(ctx, 404, message, errors, nil)
-		return
+func AuthorizeToken(ctx *gin.Context) {
+	//Get token
+	bearerToken := ctx.Request.Header.Get("Authorization")
+	if len(strings.Split(bearerToken, " ")) == 2 {
+		//Validate token
+		token, err := middleware.ValidateToken(strings.Split(bearerToken, " ")[1])
+		if token.Valid && err == nil {
+			claims := token.Claims.(jwt.MapClaims)
+			// Query User from id
+			var user models.User
+			if errDB := config.DB.Where("id = ?", claims["id"]).First((&user)).Error; errDB == nil {
+				helpers.RespondJSON(ctx, 200, "Validate token successful!", nil, &user)
+				return
+			} else {
+				helpers.RespondJSON(ctx, 400, "User doesn't exist", errDB.Error(), &user)
+				return
+			}
+		} else {
+			helpers.RespondJSON(ctx, 401, "Failed to validate token", err.Error(), nil)
+			return
+		}
 	} else {
-		message := "its cookie"
-		helpers.RespondJSON(ctx, 200, message, nil, cookie)
+		helpers.RespondJSON(ctx, 400, "Failed to process request", "No token found", nil)
 		return
 	}
 }
