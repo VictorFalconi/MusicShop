@@ -9,6 +9,6 @@
 - [gin](https://github.com/gin-gonic/gin)
 - [gorm](https://github.com/go-gorm/gorm)
 - [validator](https://github.com/go-playground/validator)
+- [jwt](https://github.com/golang-jwt/jwt)
 
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
-- [jwt](https://github.com/golang-jwt/jwt)

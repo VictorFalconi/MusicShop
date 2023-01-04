@@ -37,7 +37,6 @@ func Register(ctx *gin.Context) {
 		return
 	} else {
 		message := "Created user succesful!"
-		//errors := nil
 		helpers.RespondJSON(ctx, 201, message, nil, nil)
 		return
 	}
@@ -92,6 +91,16 @@ func Login(ctx *gin.Context) {
 	}
 }
 
-func User() {
-
+func getNameUser(ctx *gin.Context) {
+	cookie, err := ctx.Cookie("Authorization")
+	if err == nil {
+		message := "Dont get Cookie"
+		errors := err.Error()
+		helpers.RespondJSON(ctx, 404, message, errors, nil)
+		return
+	} else {
+		message := "its cookie"
+		helpers.RespondJSON(ctx, 200, message, nil, cookie)
+		return
+	}
 }
