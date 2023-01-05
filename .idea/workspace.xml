@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update token controller">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update AuthorizeToken controller">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +123,8 @@
     <MESSAGE value="Update authentication with jwt" />
     <MESSAGE value="Update README.md, jwt" />
     <MESSAGE value="Update token controller" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update token controller" />
+    <MESSAGE value="Update AuthorizeToken controller" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update AuthorizeToken controller" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

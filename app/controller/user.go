@@ -85,7 +85,7 @@ func AuthorizeToken(ctx *gin.Context) {
 			claims := token.Claims.(jwt.MapClaims)
 			// Query User from id
 			var user models.User
-			if errDB := config.DB.Where("id = ?", claims["id"]).First((&user)).Error; errDB == nil {
+			if errDB := config.DB.Where("id = ?", claims["id"]).First(&user).Error; errDB == nil {
 				helpers.RespondJSON(ctx, 200, "Validate token successful!", nil, &user)
 				return
 			} else {
