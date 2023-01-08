@@ -20,15 +20,17 @@ func Register(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, "Error JSON form!", err.Error(), nil)
 		return
 	}
-	// Check validate
+	// Check validate      ---- Thiếu 1 cái nhập sai, dư field k có trong user
 	validate := validator.New()
 	if err := validate.Struct(&user); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error validate!", err.Error(), nil)
+		dictErrors := helpers.StringToListErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, "Error validate!", dictErrors, nil)
 		return
 	}
 	// Hash password & create new User
 	user.HashPassword()
 	if err := config.DB.Create(&user).Error; err != nil {
+
 		helpers.RespondJSON(ctx, 401, "Duplitace Fields!", err.Error(), nil)
 		return
 	} else {
@@ -46,7 +48,8 @@ func Login(ctx *gin.Context) {
 	}
 	validate := validator.New()
 	if err := validate.Struct(&currUser); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error validate!", err.Error(), nil)
+		dictErrors := helpers.StringToListErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, "Error validate!", dictErrors, nil)
 		return
 	}
 	// Check Field "name" in db
