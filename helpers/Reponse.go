@@ -1,8 +1,10 @@
 package helpers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/jackc/pgconn"
 )
 
 type ReponseData struct {
@@ -22,12 +24,13 @@ func RespondJSON(w *gin.Context, status int, message string, errors interface{},
 	w.JSON(200, res)
 }
 
-// String to list errors from validator.Struct.Error
+//Validate
 type FieldError struct {
 	Field   string
 	Message string
 }
 
+// String to list errors from validator.Struct.Error JSON
 func MessageForTag(fe validator.FieldError) string {
 	switch fe.Tag() {
 	//Validate
@@ -43,10 +46,32 @@ func MessageForTag(fe validator.FieldError) string {
 	return fe.Error()
 }
 
-func StringToListErrors(errs validator.ValidationErrors) interface{} {
-	dictErrors := make([]FieldError, len(errs))
+func ValidateErrors(errs validator.ValidationErrors) interface{} {
+	listErrors := make([]FieldError, len(errs))
 	for index, e := range errs {
-		dictErrors[index] = FieldError{Field: e.Field(), Message: MessageForTag(e)}
+		listErrors[index] = FieldError{Field: e.Field(), Message: MessageForTag(e)}
 	}
-	return dictErrors
+	return listErrors
+}
+
+// Validate DB
+func MessageForTagDB(pgErr *pgconn.PgError) string {
+	switch pgErr.Code {
+	//Validate DB
+	case "23505":
+		return "This field is duplicate"
+	}
+	return pgErr.Error()
+}
+
+func DBError(err error) interface{} {
+	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) {
+		//dictError := FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
+		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)}
+		listError := make([]FieldError, 1)
+		listError[0] = FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
+		return listError
+	}
+	return nil
 }

@@ -23,18 +23,18 @@ func Register(ctx *gin.Context) {
 	// Check validate      ---- Thiếu 1 cái nhập sai, dư field k có trong user
 	validate := validator.New()
 	if err := validate.Struct(&user); err != nil {
-		dictErrors := helpers.StringToListErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, "Error validate!", dictErrors, nil)
+		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
 		return
 	}
 	// Hash password & create new User
 	user.HashPassword()
 	if err := config.DB.Create(&user).Error; err != nil {
-
-		helpers.RespondJSON(ctx, 401, "Duplitace Fields!", err.Error(), nil)
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 201, "Created user succesful!", nil, nil)
+		helpers.RespondJSON(ctx, 201, "Created user successful!", nil, nil)
 		return
 	}
 }
@@ -48,19 +48,19 @@ func Login(ctx *gin.Context) {
 	}
 	validate := validator.New()
 	if err := validate.Struct(&currUser); err != nil {
-		dictErrors := helpers.StringToListErrors(err.(validator.ValidationErrors))
+		dictErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
 		helpers.RespondJSON(ctx, 400, "Error validate!", dictErrors, nil)
 		return
 	}
 	// Check Field "name" in db
 	user := &models.User{}
 	if err := config.DB.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-		helpers.RespondJSON(ctx, 401, "Name doesn't exist", err.Error(), nil)
+		helpers.RespondJSON(ctx, 401, "Incorrect Filed", "Name isn't already exist", nil)
 		return
 	} else {
 		// Compare password
 		if user.ComparePassword(currUser.Password) == false {
-			helpers.RespondJSON(ctx, 401, "Incorrect password", err.Error(), nil)
+			helpers.RespondJSON(ctx, 401, "Incorrect Filed", "Incorrect Password", nil)
 			return
 		} else {
 			//Create token

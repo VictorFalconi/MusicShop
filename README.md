@@ -9,11 +9,12 @@ Build CRUD website with golang, postgresql and deploy on docker
 - [Link crawl]()
 
 ## Database
-- [postgres](https://hub.docker.com/_/postgres)
+- [postgres](https://hub.docker.com/_/postgres) Database
+- [gorm](https://github.com/go-gorm/gorm) ORMS
+- [pgx](https://github.com/jackc/pgx) Driver & toolkit
 
 ## Framework & Library
 - [gin](https://github.com/gin-gonic/gin)
-- [gorm](https://github.com/go-gorm/gorm)
 - [validator](https://github.com/go-playground/validator)
 - [jwt](https://github.com/golang-jwt/jwt)
 
@@ -27,7 +28,6 @@ docker exec -it my_postgres createdb --username=thanhliem music_shop
 
 **Run web**
 ```
-docker run --name my_postgres -p 41234:5432 -e POSTGRES_USER=thanhliem -e POSTGRES_PASSWORD=liem1234 -d postgres:latest
-docker exec -it my_postgres createdb --username=thanhliem music_shop
+go run main.go
 ```
 
