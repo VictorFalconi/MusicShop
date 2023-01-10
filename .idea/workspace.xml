@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update Reponse.go, controller/user.go : Validate Database">
-      <change afterPath="$PROJECT_DIR$/test/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update docker-compose.yml, Dockerfile: Run server and db in Docker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/test/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/db/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +126,8 @@
     <MESSAGE value="Update AuthorizeToken controller" />
     <MESSAGE value="Update README.md, docker-compose.yml" />
     <MESSAGE value="Update Reponse.go, controller/user.go : Validate Database" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Reponse.go, controller/user.go : Validate Database" />
+    <MESSAGE value="Update docker-compose.yml, Dockerfile: Run server and db in Docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update docker-compose.yml, Dockerfile: Run server and db in Docker" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
