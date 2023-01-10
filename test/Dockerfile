@@ -7,11 +7,11 @@ WORKDIR /server
 
 ENV GO111MODULE=on CGO_ENABLED=0
 
-COPY go.mod ./
-COPY go.sum ./
+COPY ../go.mod ./
+COPY ../go.sum ./
 RUN go mod download
 
-COPY . .
+COPY .. .
 
 RUN #go build -o /server/main /server/main.go
 
