@@ -68,7 +68,7 @@ func DBError(err error) interface{} {
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
 		//dictError := FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
-		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)}
+		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)} //Return ''
 		listError := make([]FieldError, 1)
 		listError[0] = FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
 		return listError
