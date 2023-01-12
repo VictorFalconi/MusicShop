@@ -15,19 +15,18 @@ import (
 // Register new User
 func Register(ctx *gin.Context) {
 	var user models.User
-	// Check type JSON
-	if err := ctx.ShouldBindJSON(&user); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error JSON form!", err.Error(), nil)
+	// Check data type
+	if err := helpers.DataContentType(ctx, &user); err != nil {
+		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
 		return
 	}
-	// Check validate      ---- Thiếu 1 cái nhập sai, dư field k có trong user
-	validate := validator.New()
-	if err := validate.Struct(&user); err != nil {
+	// Check validate field     ---- Thiếu 1 cái nhập sai, dư field k có trong user
+	if err := validator.New().Struct(&user); err != nil {
 		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
 		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
 		return
 	}
-	// Hash password & create new User
+	// Hash password, create new User (Check validate Database)
 	user.HashPassword()
 	if err := config.DB.Create(&user).Error; err != nil {
 		ErrorDB := helpers.DBError(err)
@@ -42,8 +41,8 @@ func Register(ctx *gin.Context) {
 // Login user
 func Login(ctx *gin.Context) {
 	var currUser models.LoginUser
-	if err := ctx.ShouldBindJSON(&currUser); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error JSON form!", err.Error(), nil)
+	if err := helpers.DataContentType(ctx, &currUser); err != nil {
+		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
 		return
 	}
 	validate := validator.New()
