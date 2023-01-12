@@ -26,8 +26,18 @@ func Register(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
 		return
 	}
-	// Hash password, create new User (Check validate Database)
-	user.HashPassword()
+	// Set role for user
+	if err := user.SetUserRole(config.DB, "user"); err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		return
+	}
+	// Hash password
+	if err := user.HashPassword(); err != nil {
+		helpers.RespondJSON(ctx, 401, "Error Field", "Cant Hash Password", nil)
+		return
+	}
+	// Create new User (Check validate Database)
 	if err := config.DB.Create(&user).Error; err != nil {
 		ErrorDB := helpers.DBError(err)
 		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)

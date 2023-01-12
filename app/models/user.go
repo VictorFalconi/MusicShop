@@ -6,6 +6,16 @@ import (
 	"time"
 )
 
+type Role struct {
+	Id        uint   `json:"ID"           form:"ID"           gorm:"primary_key" `
+	Name      string `json:"name"         form:"name"         gorm:"unique;not null" validate:"required,min=4,max=32"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	User User `gorm:"foreignKey:RoleId;references:Id"` //role 1-n user
+}
+
 type User struct {
 	Id          uint   `json:"ID"           form:"ID"           gorm:"primary_key" `
 	Name        string `json:"name"         form:"name"         gorm:"unique;not null" validate:"required,min=4,max=32"`
@@ -15,11 +25,23 @@ type User struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
+
+	RoleId uint
 }
 
 type LoginUser struct {
-	Name     string `json:"name" validate:"required,min=4,max=32"`
-	Password string `json:"password" validate:"required,min=4,max=32"`
+	Name     string `json:"name"     form:"name"     validate:"required,min=4,max=32"`
+	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
+}
+
+// Set Role User:
+func (u *User) SetUserRole(db *gorm.DB, roleName string) error {
+	var role Role
+	if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {
+		return err
+	}
+	u.RoleId = role.Id
+	return nil
 }
 
 // HashPassword :
