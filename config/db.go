@@ -40,6 +40,7 @@ func ConnectDB() {
 		panic(err)
 	}
 	db.AutoMigrate(&models.Role{}, &models.User{})
+	db.AutoMigrate(&models.Brand{})
 	fmt.Println("Migration complete")
 	DB = db
 

@@ -12,7 +12,7 @@ func CreateToken(id uint) (string, error) {
 	claims["authorized"] = true
 	claims["id"] = id
 	//claims["exp"] = time.Now().Add(time.Hour * 12).Unix() //Token out of date after 12 hours
-	claims["exp"] = time.Now().Add(time.Second * 30).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 10).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("SECRET_JWT")))

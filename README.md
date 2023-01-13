@@ -44,9 +44,9 @@ docker run --net server_default --name backend_golang -p 6868:6868 -d golang:lat
 
 **User**
 
-| Method | Link                | Decription                                 |
-|--------|---------------------|--------------------------------------------|
-| POST   | /user/register      | Create a new "user" with rolename = user   |
-| POST   | /user/login         | Login for the website (Create a new token) |
-| GET    | /user/ValidateToken | Validate user with token                   |
+| Method | Link                | Request         | Response | Decription                                 |
+|--------|---------------------|-----------------|----------|--------------------------------------------|
+| POST   | /user/register      | Form-data, JSON | JSON     | Create a new "user" with rolename = user   |
+| POST   | /user/login         |                 |          | Login for the website (Create a new token) |
+| GET    | /user/ValidateToken |                 |          | Validate user with token                   |
 

@@ -6,7 +6,32 @@ import (
 	"net/http"
 	"server/app/models"
 	"server/config"
+	"server/helpers"
 )
+
+func CreateBrand(ctx *gin.Context) {
+	var brand models.Brand
+	// Check data type
+	if err := helpers.DataContentType(ctx, &brand); err != nil {
+		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		return
+	}
+	// Check validate field
+	if err := validator.New().Struct(&brand); err != nil {
+		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
+		return
+	}
+	// Create new Brand (Check validate Database)
+	if err := config.DB.Create(&brand).Error; err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
+		return
+	}
+}
 
 func ReadUser(ctx *gin.Context) {
 	var user models.User
