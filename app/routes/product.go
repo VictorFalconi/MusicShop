@@ -7,9 +7,8 @@ import (
 
 func BrandRouter(router *gin.Engine) {
 	router.POST("/brand", controller.CreateBrand)
-	router.GET("/brand", controller.Register)
-	router.GET("/brand/{id}", controller.Register)
-	router.PUT("/brand/{id}", controller.Register)
-	router.DELETE("/brand/{id}", controller.Register)
-
+	router.GET("/brand", controller.ReadBrands)
+	router.GET("/brand/:id", controller.ReadBrand)
+	router.PUT("/brand/:id", controller.UpdateBrand)
+	router.DELETE("/brand/:id", controller.DeleteUser)
 }

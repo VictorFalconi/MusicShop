@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 	"server/app/models"
 	"server/config"
 	"server/helpers"
@@ -33,43 +32,71 @@ func CreateBrand(ctx *gin.Context) {
 	}
 }
 
-func ReadUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).First((&user))
-	ctx.JSON(200, &user)
+func ReadBrands(ctx *gin.Context) {
+	var brands []models.Brand
+	if err := config.DB.Find(&brands).Error; err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 200, "Read brands successful!", nil, &brands)
+		return
+	}
 }
 
-func ReadUsers(ctx *gin.Context) {
-	var users []models.User
-	config.DB.Find(&users)
-	ctx.JSON(200, &users)
+func ReadBrand(ctx *gin.Context) {
+	var brand models.Brand
+	if err := config.DB.Where("id = ?", ctx.Param("id")).First(&brand).Error; err != nil {
+		//ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 200, "Read brand successful!", nil, &brand)
+		return
+	}
 }
 
-func UpdateUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).First((&user))
-	//ctx.BindJSON(&user)
-	//config.DB.Save(&user)
-	//ctx.JSON(200, &user)
-	err := ctx.ShouldBindJSON(&user)
-	if err == nil {
-		validate := validator.New()
-		err := validate.Struct(&user)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //bad json
-		} else {
-			err := config.DB.Save(&user).Error
-			if err == nil {
-				ctx.JSON(200, &user) //oke
-			} else {
-				ctx.JSON(http.StatusBadGateway, gin.H{"error": err.Error()}) //bad gateway
-			}
-		}
+func UpdateBrand(ctx *gin.Context) {
+	// Find brand
+	var currBrand models.Brand
+	config.DB.Where("id = ?", ctx.Param("id")).First((&currBrand))
+	// Get request
+	var newBrand models.Brand
+	if err := helpers.DataContentType(ctx, &newBrand); err != nil {
+		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		return
+	}
+	if err := validator.New().Struct(&newBrand); err != nil {
+		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
+		return
+	}
+	// Update
+	currBrand.Name = newBrand.Name
+	if err := config.DB.Save(&currBrand).Error; err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 200, "Updated brand successful!", nil, nil)
+		return
 	}
 }
 
 func DeleteUser(ctx *gin.Context) {
-	var user models.User
-	config.DB.Where("id = ?", ctx.Param("id")).Delete(&user)
-	ctx.JSON(200, &user)
+	// Find Brand
+	var currBrand models.Brand
+	if err := config.DB.Where("id = ?", ctx.Param("id")).First(&currBrand).Error; err != nil {
+		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		return
+	}
+	// Delete
+	if err := config.DB.Delete(&currBrand).Error; err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 404, "Error Database", ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 204, "Deleted brand successful!", nil, nil)
+		return
+	}
 }

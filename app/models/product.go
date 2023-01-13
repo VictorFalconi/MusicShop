@@ -27,12 +27,12 @@ type Product struct {
 
 type Gallery struct {
 	Id        uint   `json:"ID"          gorm:"primary_key"`
-	Thumbnail string `json:"thumbnail"   gorm:""             validate:""`
+	Thumbnail string `json:"thumbnail"   gorm:"not null"             validate:""`
 
 	ProductId uint
 }
 
 type Brand struct {
-	Id   uint   `json:"ID"    gorm:"primary_key"`
-	Name string `json:"name"  gorm:"unique;not null"  validate:"required,min=4,max=128"`
+	Id   uint   `json:"ID"   form:"ID"     gorm:"primary_key"`
+	Name string `json:"name" form:"name"   gorm:"unique;not null"  validate:"required,max=128"`
 }
