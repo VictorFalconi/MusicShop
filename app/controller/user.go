@@ -20,7 +20,7 @@ func Register(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
 		return
 	}
-	// Check validate field     ---- Thiếu 1 cái nhập sai, dư field k có trong user
+	// Check validate field     //Thiếu 2 cái: nhập dư field k có trong user; nhập trùng 2 field giống nhau
 	if err := validator.New().Struct(&user); err != nil {
 		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
 		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)

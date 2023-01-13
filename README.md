@@ -2,11 +2,9 @@
 Build CRUD website with golang, postgresql and deploy on docker
 
 
-## Crawl data using Python
-- [Selenium](https://pypi.org/project/selenium/)
-
+## Website
 - [LPCLUB](https://lpclub.vn/)
-- [Link crawl]()
+- [Link crawl](https://github.com/MusicShopVersion1/crawl_data)
 
 ## Database
 - [postgres](https://hub.docker.com/_/postgres) Database
@@ -40,4 +38,14 @@ docker network list #(server_default)
 ```
 docker run --net server_default --name backend_golang -p 6868:6868 -d golang:latest
 ```
+
+## APIs
+
+**User**
+
+| Method | Link                | Decription                                 |
+|--------|---------------------|--------------------------------------------|
+| POST   | /user/register      | Create a new "user" with rolename = user   |
+| POST   | /user/login         | Login for the website (Create a new token) |
+| GET    | /user/ValidateToken | Validate user with token                   |
 
