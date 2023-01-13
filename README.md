@@ -1,4 +1,5 @@
-# Music Shop backend website with Golang & Postgres using docker
+# Backend of MusicShop Website
+
 Build CRUD website with golang, postgresql and deploy on docker
 
 
