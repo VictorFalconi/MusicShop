@@ -9,7 +9,7 @@ Build CRUD website with golang, postgresql and deploy on docker
 
 ## Database
 - [postgres](https://hub.docker.com/_/postgres) Database
-- [gorm](https://github.com/go-gorm/gorm) ORMS
+- [gorm](https://github.com/go-gorm/gorm) ORM
 - [pgx](https://github.com/jackc/pgx) Driver & toolkit
 
 ![Database Diagram](https://github.com/liemkg1234/Websocket_FaceMaskDetection/blob/master/images/sodotongquat.PNG)
