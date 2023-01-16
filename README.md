@@ -12,7 +12,7 @@ Build CRUD website with golang, postgresql and deploy on docker
 - [gorm](https://github.com/go-gorm/gorm) ORM
 - [pgx](https://github.com/jackc/pgx) Driver & toolkit
 
-![Database Diagram](https://github.com/MusicShopVersion1/server/blob/master/images/MusicShop%20Database.png)
+![Database Diagram](https://github.com/MusicShopVersion1/server/blob/master/images/Web%20Online%20MusicShop.png)
 
 ## Framework & Library
 - [gin](https://github.com/gin-gonic/gin)
