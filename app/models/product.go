@@ -11,6 +11,7 @@ import (
 type Product struct {
 	Id          uint    `json:"ID"          gorm:"primary_key"`
 	Name        string  `json:"name"        gorm:"unique;not null"          validate:"required,min=4,max=128"`
+	Amount      int     `json:"amount"      gorm:"not null;default:0"       validate:"required"`
 	Price       float32 `json:"price"       gorm:"not null"                 validate:"required"`
 	Discount    float32 `json:"discount"    gorm:"not null;default:0.0"     validate:""`
 	Thumbnail   string  `json:"thumbnail"   gorm:""                         validate:""`
@@ -28,11 +29,9 @@ type Product struct {
 type Gallery struct {
 	Id        uint   `json:"ID"          gorm:"primary_key"`
 	Thumbnail string `json:"thumbnail"   gorm:"not null"             validate:""`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	ProductId uint
-}
-
-type Brand struct {
-	Id   uint   `json:"ID"   form:"ID"     gorm:"primary_key"`
-	Name string `json:"name" form:"name"   gorm:"unique;not null"  validate:"required,max=128"`
 }

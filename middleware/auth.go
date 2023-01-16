@@ -2,8 +2,11 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	"gorm.io/gorm"
 	"os"
+	"server/app/models"
 	"time"
 )
 
@@ -25,4 +28,21 @@ func ValidateToken(token string) (*jwt.Token, error) {
 		}
 		return []byte(os.Getenv("SECRET_JWT")), nil
 	})
+}
+
+// Login using username & password
+func BasicAuth(currUser models.LoginUser, user models.User, db *gorm.DB, ctx *gin.Context) (string, string, error) {
+	if err := db.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
+		message := "Incorrect Filed"
+		error := "Name isn't already exist"
+		return message, error, err
+	} else {
+		// Compare password
+		if user.ComparePassword(currUser.Password) == false {
+			message := "Incorrect Filed"
+			error := "Incorrect Password"
+			return message, error, err
+		}
+	}
+	return "", "", nil
 }

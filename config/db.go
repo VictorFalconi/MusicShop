@@ -18,7 +18,6 @@ func Init_Role() error {
 	if err := DB.Create(&admin_role).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
 		fmt.Println("Error Database: Dont create admin role")
-		return err
 	}
 	// user
 	var user_role models.Role
@@ -26,7 +25,13 @@ func Init_Role() error {
 	if err := DB.Create(&user_role).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
 		fmt.Println("Error Database: Dont create user role")
-		return err
+	}
+	// employee
+	var employee_role models.Role
+	employee_role.Name = "employee"
+	if err := DB.Create(&employee_role).Error; err != nil {
+		//ErrorDB := helpers.DBError(err)
+		fmt.Println("Error Database: Dont create employee role")
 	}
 	return nil
 }
@@ -44,7 +49,7 @@ func ConnectDB() {
 	fmt.Println("Migration complete")
 	DB = db
 
-	// Create "admin & user" role
+	// Create "admin, employee, user" role
 	if errRole := Init_Role(); errRole != nil {
 		fmt.Println("Dont create role")
 	}
