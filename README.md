@@ -44,19 +44,18 @@ docker run --net server_default --name backend_golang -p 6868:6868 -d golang:lat
 
 **User**
 
-| Method | Link                | Request         | Response | Decription                                 |
-|--------|---------------------|-----------------|----------|--------------------------------------------|
-| POST   | /user/register      | Form-data, JSON | 201      | Create a new "user" with rolename = user   |
-| POST   | /user/login         | Form-data, JSON | 201      | Login for the website (Create a new token) |
-| GET    | /user/ValidateToken | Cookie          | 200      | Validate user with token                   |
+| Method | Link           | Request         | Middleware | Response | Description                                |
+|--------|----------------|-----------------|------------|----------|--------------------------------------------|
+| POST   | /user/register | Form-data, JSON |            | 201      | Create a new "user" with rolename = user   |
+| POST   | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token) |
 
 **Brand**
 
-| Method | Link       | Request         | Response | Decription                |
-|--------|------------|-----------------|----------|---------------------------|
-| POST   | /brand     | Form-data, JSON | 201      | Create a new "user" brand |
-| GET    | /brand     |                 | 200      | Get brands                |
-| GET    | /brand/:id |                 | 200      | Get a brand               |
-| PUT    | /brand/:id | Form-data, JSON | 200      | Update a brand            |
-| DELETE | /brand/:id |                 | 204      | Delete a brand            |
+| Method | Link       | Request         | Middleware     | Response | Description               |
+|--------|------------|-----------------|----------------|----------|---------------------------|
+| POST   | /brand     | Form-data, JSON | Token, isAdmin | 201      | Create a new "user" brand |
+| GET    | /brand     |                 | Token          | 200      | Get brands                |
+| GET    | /brand/:id |                 | Token          | 200      | Get a brand               |
+| PUT    | /brand/:id | Form-data, JSON | Token, isAdmin | 200      | Update a brand            |
+| DELETE | /brand/:id |                 | Token, isAdmin | 200      | Delete a brand            |
 

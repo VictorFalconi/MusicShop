@@ -87,7 +87,7 @@ func Login(ctx *gin.Context) {
 	}
 }
 
-func AuthorizeToken(ctx *gin.Context) {
+func AuthenticToken(ctx *gin.Context) {
 	//Get token
 	bearerToken := ctx.Request.Header.Get("Authorization")
 	if len(strings.Split(bearerToken, " ")) == 2 {

@@ -34,7 +34,17 @@ type LoginUser struct {
 	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
 }
 
-// Set Role User:
+// Get Name_Role of User
+
+func (u *User) GetNameRoleUser(db *gorm.DB) (error, string) {
+	var role Role
+	if err := db.Where("id = ?", u.RoleId).First(&role).Error; err != nil {
+		return err, ""
+	}
+	return nil, role.Name
+}
+
+// Set Role of User form Name_Role:
 func (u *User) SetUserRole(db *gorm.DB, roleName string) error {
 	var role Role
 	if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {

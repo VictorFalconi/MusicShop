@@ -3,13 +3,16 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"server/app/controller"
+	"server/middleware"
 )
 
 func BrandRouter(router *gin.Engine) {
-	router.POST("/brand", controller.CreateBrand)
+	router.Use(middleware.Middleware_Authentic())
+
+	router.POST("/brand", middleware.Middleware_IsAdmin(), controller.CreateBrand)
 	router.GET("/brand", controller.ReadBrands)
 	router.GET("/brand/:id", controller.ReadBrand)
-	router.PUT("/brand/:id", controller.UpdateBrand)
-	router.DELETE("/brand/:id", controller.DeleteBrand)
-	router.POST("/brand/file", controller.CreateBrand_FromFile)
+	router.PUT("/brand/:id", middleware.Middleware_IsAdmin(), controller.UpdateBrand)
+	router.DELETE("/brand/:id", middleware.Middleware_IsAdmin(), controller.DeleteBrand)
+	router.POST("/brand/file", middleware.Middleware_IsAdmin(), controller.CreateBrand_FromFile)
 }
