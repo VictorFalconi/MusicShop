@@ -82,7 +82,7 @@ func Middleware_IsAdmin() gin.HandlerFunc {
 					if errName == nil && RoleName == "admin" {
 						ctx.Next()
 					} else {
-						helpers.RespondJSON(ctx, 400, "Error Authorization", "Account is not authorized, You are not admin", nil)
+						helpers.RespondJSON(ctx, 403, "Error Authorization", "Account is not authorized, You are not admin", nil)
 						ctx.Abort()
 						return
 					}

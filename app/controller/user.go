@@ -29,18 +29,18 @@ func Register(ctx *gin.Context) {
 	// Set role for user
 	if err := user.SetUserRole(config.DB, "user"); err != nil {
 		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
 		return
 	}
 	// Hash password
 	if err := user.HashPassword(); err != nil {
-		helpers.RespondJSON(ctx, 401, "Error Field", "Cant Hash Password", nil)
+		helpers.RespondJSON(ctx, 400, "Error Field", "Cant Hash Password", nil)
 		return
 	}
 	// Create new User (Check validate Database)
 	if err := config.DB.Create(&user).Error; err != nil {
 		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 401, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 201, "Created user successful!", nil, nil)
@@ -64,12 +64,12 @@ func Login(ctx *gin.Context) {
 	// Check Field "name" in db
 	user := &models.User{}
 	if err := config.DB.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-		helpers.RespondJSON(ctx, 401, "Incorrect Filed", "Name isn't already exist", nil)
+		helpers.RespondJSON(ctx, 400, "Incorrect Filed", "Name isn't already exist", nil)
 		return
 	} else {
 		// Compare password
 		if user.ComparePassword(currUser.Password) == false {
-			helpers.RespondJSON(ctx, 401, "Incorrect Filed", "Incorrect Password", nil)
+			helpers.RespondJSON(ctx, 400, "Incorrect Filed", "Incorrect Password", nil)
 			return
 		} else {
 			//Create token
