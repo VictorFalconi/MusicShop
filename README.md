@@ -12,6 +12,8 @@ Build CRUD website with golang, postgresql and deploy on docker
 - [gorm](https://github.com/go-gorm/gorm) ORMS
 - [pgx](https://github.com/jackc/pgx) Driver & toolkit
 
+![Database Diagram](https://github.com/liemkg1234/Websocket_FaceMaskDetection/blob/master/images/sodotongquat.PNG)
+
 ## Framework & Library
 - [gin](https://github.com/gin-gonic/gin)
 - [validator](https://github.com/go-playground/validator)
