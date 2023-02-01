@@ -2,11 +2,9 @@ package controller
 
 import (
 	"encoding/csv"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"log"
-	"net/http"
+	"io"
 	"path/filepath"
 	"server/app/models"
 	"server/config"
@@ -107,28 +105,47 @@ func DeleteBrand(ctx *gin.Context) {
 }
 
 func CreateBrand_FromFile(ctx *gin.Context) {
-	file_ptr, err := ctx.FormFile("file")
+	// Read file
+	file, err := ctx.FormFile("file")
 	if err != nil {
-		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
 		return
 	}
-	log.Println(file_ptr.Filename)
-	log.Println(filepath.Ext(file_ptr.Filename))
-	file, err := file_ptr.Open()
-	if err != nil {
-		log.Println(err.Error())
-		ctx.Status(http.StatusUnprocessableEntity)
+	//log.Println(file.Filename)
+	//log.Println(filepath.Ext(file.Filename))
+	if filepath.Ext(file.Filename) != ".csv" {
+		helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must CSV", nil)
 		return
 	}
-	defer file.Close()
-	records, err := csv.NewReader(file).ReadAll()
+	// Read the contents of the file into a variable
+	csvFile, err := file.Open()
 	if err != nil {
-		log.Println(err.Error())
-		ctx.Status(http.StatusUnprocessableEntity)
+		helpers.RespondJSON(ctx, 400, "Error file!", err.Error(), nil)
 		return
 	}
-	fmt.Println(records)
-	for _, line := range records {
-		fmt.Println(line)
+	defer csvFile.Close()
+
+	// read csv
+	reader := csv.NewReader(csvFile)
+	var brands []models.Brand
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			helpers.RespondJSON(ctx, 400, "Error data!", err.Error(), nil)
+			return
+		}
+		brand := models.Brand{Name: record[0]}
+		brands = append(brands, brand)
+	}
+	// Create new Brands
+	if err := config.DB.Create(&brands).Error; err != nil {
+		ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
+		return
 	}
 }
