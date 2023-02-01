@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Images">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update middleware: Authentication &amp; Authorization">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controller/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,9 +116,9 @@
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Update product: model, route, controller" />
     <MESSAGE value="Update product: CRUD brand" />
-    <MESSAGE value="Update middleware: Authentication &amp; Authorization" />
     <MESSAGE value="Images" />
-    <option name="LAST_COMMIT_MESSAGE" value="Images" />
+    <MESSAGE value="Update middleware: Authentication &amp; Authorization" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update middleware: Authentication &amp; Authorization" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
