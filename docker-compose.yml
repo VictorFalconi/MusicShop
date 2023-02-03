@@ -1,7 +1,18 @@
 version: '3.8'
 
 services:
-  postgres:
+  server:
+    image: golang_musicshop
+    container_name: backend_golang
+    build: .
+    ports:
+      - "6868:6868"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
     image: postgres:latest
     container_name: postgres_db
     environment:
@@ -10,14 +21,3 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
-
-#  server:
-#    image: postgres:latest
-#    container_name: backend_golang
-#    build: .
-#    env_file:
-#      - .env
-#    ports:
-#      - "6868:6868"
-#    volumes:
-#      - .:/server

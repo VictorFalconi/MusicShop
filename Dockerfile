@@ -2,7 +2,6 @@ FROM golang:1.18.9
 
 #LABEL maintainer="liemkg1234@gmail.com"
 
-RUN mkdir /server
 WORKDIR /server
 
 ENV GO111MODULE=on CGO_ENABLED=0
@@ -12,8 +11,6 @@ COPY ../go.sum ./
 RUN go mod download
 
 COPY .. .
-
-RUN #go build -o /server/main /server/main.go
 
 RUN go build -o /build
 

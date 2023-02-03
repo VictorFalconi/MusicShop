@@ -21,25 +21,10 @@ Build CRUD website with golang, postgresql and deploy on docker
 
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
 
-### Create image
+### Run project
 
-**Golang**
-```
-docker build --tag golang .
-```
-
-### Run
-
-**Run database**
 ```
 docker compose up
-```
-
-**Run web**
-
-docker network list #(server_default)
-```
-docker run --net server_default --name backend_golang -p 6868:6868 -d golang:latest
 ```
 
 ## APIs
