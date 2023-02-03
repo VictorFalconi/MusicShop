@@ -53,11 +53,22 @@ docker run --net server_default --name backend_golang -p 6868:6868 -d golang:lat
 
 **Brand**
 
-| Method | Link       | Request         | Middleware     | Response | Description               |
-|--------|------------|-----------------|----------------|----------|---------------------------|
-| POST   | /brand     | Form-data, JSON | Token, isAdmin | 201      | Create a new "user" brand |
-| GET    | /brand     |                 | Token          | 200      | Get brands                |
-| GET    | /brand/:id |                 | Token          | 200      | Get a brand               |
-| PUT    | /brand/:id | Form-data, JSON | Token, isAdmin | 200      | Update a brand            |
-| DELETE | /brand/:id |                 | Token, isAdmin | 200      | Delete a brand            |
+| Method | Link        | Request         | Middleware     | Response | Description                 |
+|--------|-------------|-----------------|----------------|----------|-----------------------------|
+| POST   | /brand      | Form-data, JSON | Token, isAdmin | 201      | Create a new brand          |
+| POST   | /brand/file | Form-data       | Token, isAdmin | 201      | Create brands with CSV file |
+| GET    | /brand      |                 | Token          | 200      | Get brands                  |
+| GET    | /brand/:id  |                 | Token          | 200      | Get a brand                 |
+| PUT    | /brand/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a brand              |
+| DELETE | /brand/:id  |                 | Token, isAdmin | 204      | Delete a brand              |
 
+**Product**
+
+| Method | Link          | Request         | Middleware     | Response | Description                   |
+|--------|---------------|-----------------|----------------|----------|-------------------------------|
+| POST   | /product      | Form-data, JSON | Token, isAdmin | 201      | Create a new product          |
+| POST   | /product/file | Form-data       | Token, isAdmin | 201      | Create products with CSV file |
+| GET    | /product      |                 | Token          | 200      | Get products                  |
+| GET    | /product/:id  |                 | Token          | 200      | Get a product                 |
+| PUT    | /product/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a product              |
+| DELETE | /product/:id  |                 | Token, isAdmin | 204      | Delete a product              |
