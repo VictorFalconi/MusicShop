@@ -55,6 +55,8 @@ func MessageForTagDB(pgErr *pgconn.PgError) string {
 	//Validate DB
 	case "23505":
 		return "This field is duplicate"
+	case "23503":
+		return "Item dont exist"
 	}
 	return pgErr.Error()
 }

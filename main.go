@@ -15,5 +15,8 @@ func main() {
 	router := gin.New()
 	routes.UserRouter(router)
 	routes.BrandRouter(router)
+	routes.ProductRouter(router)
+	routes.GalleryRouter(router)
+
 	router.Run()
 }

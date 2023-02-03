@@ -22,6 +22,7 @@ type User struct {
 	Email       string `json:"email"        form:"email"        gorm:"unique"          validate:"required,email,min=4,max=32"`
 	PhoneNumber string `json:"phone_number" form:"phone_number" gorm:"unique"          validate:"required,len=10"`
 	Password    string `json:"password"     form:"password"     gorm:"not null"        validate:"required,min=4,max=32"`
+	Address     string `json:"address"      form:"address"      gorm:""                validate:""`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
@@ -35,7 +36,6 @@ type LoginUser struct {
 }
 
 // Get Name_Role of User
-
 func (u *User) GetNameRoleUser(db *gorm.DB) (error, string) {
 	var role Role
 	if err := db.Where("id = ?", u.RoleId).First(&role).Error; err != nil {

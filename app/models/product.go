@@ -20,10 +20,22 @@ type Product struct {
 	Quality     string  `json:"quality"     gorm:""                         validate:""`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
+	DeletedAt   gorm.DeletedAt `            gorm:"index"`
 
-	Gallery Gallery `gorm:"foreignKey:ProductId;references:Id"` //Product 1-n Gallery
-	Brands  []Brand `gorm:"many2many:product_brands;"`          //Product n-n Brand
+	Gallery Gallery `json:"gallery"         gorm:"foreignKey:ProductId;references:Id"` //Product 1-n Gallery
+	Brands  []Brand `json:"brands"          gorm:"many2many:product_brands"`           //Product n-n Brand
+}
+
+func (currProduct *Product) UpdateStruct(newProduct *Product) {
+	currProduct.Name = newProduct.Name
+	currProduct.Amount = newProduct.Amount
+	currProduct.Price = newProduct.Price
+	currProduct.Discount = newProduct.Discount
+	currProduct.Thumbnail = newProduct.Thumbnail
+	currProduct.Description = newProduct.Description
+	currProduct.Year = newProduct.Year
+	currProduct.Quality = newProduct.Quality
+	currProduct.Gallery = newProduct.Gallery
 }
 
 type Gallery struct {
