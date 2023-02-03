@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update README.md: CRUD product">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update Docker: docker compose up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,7 +139,8 @@
     <MESSAGE value="Update images: update database" />
     <MESSAGE value="Update product: CRUD product" />
     <MESSAGE value="Update README.md: CRUD product" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update README.md: CRUD product" />
+    <MESSAGE value="Update Docker: docker compose up" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Docker: docker compose up" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
