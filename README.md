@@ -49,11 +49,11 @@ docker compose up
 
 **Product**
 
-| Method | Link          | Request         | Middleware     | Response | Description                   |
-|--------|---------------|-----------------|----------------|----------|-------------------------------|
-| POST   | /product      | Form-data, JSON | Token, isAdmin | 201      | Create a new product          |
-| POST   | /product/file | Form-data       | Token, isAdmin | 201      | Create products with CSV file |
-| GET    | /product      |                 | Token          | 200      | Get products                  |
-| GET    | /product/:id  |                 | Token          | 200      | Get a product                 |
-| PUT    | /product/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a product              |
-| DELETE | /product/:id  |                 | Token, isAdmin | 204      | Delete a product              |
+| Method | Link          | Request         | Middleware     | Response | Description                             |
+|--------|---------------|-----------------|----------------|----------|-----------------------------------------|
+| POST   | /product      | Form-data, JSON | Token, isAdmin | 201      | Create a new product                    |
+| POST   | /product/file | Form-data       | Token, isAdmin | 201, 207 | Create some/all product with Excel file |
+| GET    | /product      |                 | Token          | 200      | Get products                            |
+| GET    | /product/:id  |                 | Token          | 200      | Get a product                           |
+| PUT    | /product/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a product                        |
+| DELETE | /product/:id  |                 | Token, isAdmin | 204      | Delete a product                        |

@@ -14,7 +14,7 @@ func ProductRouter(router *gin.Engine) {
 	router.GET("/product/:id", controller.ReadProduct)
 	router.PUT("/product/:id", middleware.Middleware_IsAdmin(), controller.UpdateProduct)
 	router.DELETE("/product/:id", middleware.Middleware_IsAdmin(), controller.DeleteProduct)
-	//router.POST("/product/file", middleware.Middleware_IsAdmin(), controller.CreateProduct_FromFile)
+	router.POST("/product/file", middleware.Middleware_IsAdmin(), controller.CreateProduct_FromFile)
 }
 
 func GalleryRouter(router *gin.Engine) {

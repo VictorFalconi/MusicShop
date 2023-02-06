@@ -29,7 +29,7 @@ func Register(ctx *gin.Context) {
 	// Set role for user
 	if err := user.SetUserRole(config.DB, "user"); err != nil {
 		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil) // Hiện 3 lỗi khi nhập trùng cả 3 fields
 		return
 	}
 	// Hash password
@@ -64,12 +64,18 @@ func Login(ctx *gin.Context) {
 	// Check Field "name" in db
 	user := &models.User{}
 	if err := config.DB.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-		helpers.RespondJSON(ctx, 400, "Incorrect Filed", "Name isn't already exist", nil)
+		var fieldErrors []helpers.FieldError
+		fieldError := helpers.FieldError{Field: "name", Message: "Name isn't already exist"}
+		fieldErrors = append(fieldErrors, fieldError)
+		helpers.RespondJSON(ctx, 400, "Incorrect Filed", fieldErrors, nil)
 		return
 	} else {
 		// Compare password
 		if user.ComparePassword(currUser.Password) == false {
-			helpers.RespondJSON(ctx, 400, "Incorrect Filed", "Incorrect Password", nil)
+			var fieldErrors []helpers.FieldError
+			fieldError := helpers.FieldError{Field: "password", Message: "Incorrect Password"}
+			fieldErrors = append(fieldErrors, fieldError)
+			helpers.RespondJSON(ctx, 400, "Incorrect Filed", fieldErrors, nil)
 			return
 		} else {
 			//Create token

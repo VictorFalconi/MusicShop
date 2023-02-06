@@ -1,10 +1,14 @@
 package controller
 
 import (
-	"encoding/csv"
+	"bufio"
+	"bytes"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/xuri/excelize/v2"
 	"io"
+	"log"
 	"path/filepath"
 	"server/app/models"
 	"server/config"
@@ -113,8 +117,121 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
 		return
 	}
-	//log.Println(file.Filename)
-	//log.Println(filepath.Ext(file.Filename))
+
+	if filepath.Ext(file.Filename) != ".xlsx" {
+		helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must Excel (xlsx)", nil)
+		return
+	}
+	src, err := file.Open()
+	if err != nil {
+		helpers.RespondJSON(ctx, 400, "Error type!", "Dont read this", nil)
+		return
+	}
+	defer src.Close()
+
+	buf := bytes.Buffer{}
+	io.Copy(&buf, src)
+
+	// Read Excel file
+	xlsx, err := excelize.OpenReader(&buf)
+	if err != nil {
+		helpers.RespondJSON(ctx, 500, "Error file!", "Internal Server Error: "+err.Error(), nil)
+		return
+	}
+	// Get all the rows in the first sheet
+	rows, err := xlsx.GetRows("Sheet1")
+	if err != nil {
+		helpers.RespondJSON(ctx, 500, "Error file!", "Internal Server Error: "+err.Error(), nil)
+		return
+	}
+
+	var listDataErr []helpers.LineError
+	for i, row := range rows {
+		if i == 0 {
+			continue
+		}
+
+		brands, fieldErrorBrands := helpers.String2Brands(row[7])
+		product := models.Product{
+			Name:        row[0],
+			Price:       helpers.String2Float(row[1]),
+			Thumbnail:   row[2],
+			Description: row[3],
+			Year:        row[4],
+			Quality:     row[5],
+			//Gallery:   (row[6]),
+			Brands: brands}
+
+		// Create new Product
+		if errdb := config.DB.Create(&product).Error; errdb != nil || len(fieldErrorBrands) != 0 {
+			ErrorDB := helpers.DBError(errdb)
+			lineErr := helpers.LineError{
+				Line:    i + 1,
+				Message: append(ErrorDB, fieldErrorBrands...)}
+			listDataErr = append(listDataErr, lineErr)
+		} else {
+			// Create Galleries for Product
+			var galleries []models.Gallery
+			galleries = helpers.String2Galleries(row[6], product.Id)
+			if len(galleries) != 0 {
+				if errGaleery := config.DB.Create(&galleries).Error; errGaleery != nil {
+					ErrorDB := helpers.DBError(errGaleery)
+					lineErr := helpers.LineError{
+						Line:    i + 1,
+						Message: ErrorDB}
+					listDataErr = append(listDataErr, lineErr)
+				}
+			}
+		}
+	}
+	if len(listDataErr) != 0 {
+		helpers.RespondJSON(ctx, 207, "Created some products successful!", nil, listDataErr)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 201, "Created all products successful!", nil, nil)
+		return
+	}
+}
+
+//// Read many excel files
+//form, err := ctx.MultipartForm()
+//if err != nil {
+//	helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
+//	return
+//}
+//files := form.File["file"]
+//if len(files) != 2 {
+//	helpers.RespondJSON(ctx, 400, "Error type!", "Must 2 Excel file", nil)
+//	return
+//}
+//if filepath.Ext(files[0].Filename) != ".xlsx" || filepath.Ext(files[1].Filename) != ".xlsx" {
+//	helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must Excel (xlsx)", nil)
+//	return
+//}
+//var bufs []*bytes.Buffer
+//for _, file := range files {
+//	fmt.Println(file.Filename)
+//	src, err := file.Open()
+//	if err != nil {
+//		helpers.RespondJSON(ctx, 400, "Error type!", "Dont read this", nil)
+//		return
+//	}
+//	defer src.Close()
+//
+//	buf := bytes.Buffer{}
+//	io.Copy(&buf, src)
+//	bufs = append(bufs, &buf)
+//}
+
+func CreateProduct_FromFile1(ctx *gin.Context) {
+	// Read file
+	file, err := ctx.FormFile("file")
+	if err != nil {
+		helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
+		return
+	}
+	log.Println(file.Filename)
+	log.Println(filepath.Ext(file.Filename))
 	if filepath.Ext(file.Filename) != ".csv" {
 		helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must CSV", nil)
 		return
@@ -127,29 +244,44 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 	}
 	defer csvFile.Close()
 
-	// read csv
-	reader := csv.NewReader(csvFile)
+	// Create a new buffered reader for the file
+	reader := bufio.NewReader(csvFile)
 
-	// Struct file csv products
-	var products []models.Product
+	// Read all lines in the file
 	for {
-		record, err := reader.Read()
-		if err == io.EOF {
+		line, err := reader.ReadString('\n') // '\r\n'
+		if err != nil {
 			break
-		} else if err != nil {
-			helpers.RespondJSON(ctx, 400, "Error data!", err.Error(), nil)
-			return
 		}
-		product := models.Product{Name: record[0]} //????  ---- ????
-		products = append(products, product)
+		fmt.Println(line)
 	}
-	// Create new Products
-	if err := config.DB.Create(&products).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
-		return
-	}
+
+	//// read csv
+	//reader := csv.NewReader(csvFile)
+	//reader.Comma = ','
+	//reader.LazyQuotes = true
+	//
+	//// Struct file csv products
+	//var products []models.Product
+	//for {
+	//	record, err := reader.Read()
+	//	if err == io.EOF {
+	//		break
+	//	} else if err != nil {
+	//		helpers.RespondJSON(ctx, 400, "Error data!", err.Error(), nil)
+	//		return
+	//	}
+	//	fmt.Println(record, len(record))
+	//	product := models.Product{Name: record[0]} //????  ---- ????
+	//	products = append(products, product)
+	//}
+	//// Create new Products
+	//if err := config.DB.Create(&products).Error; err != nil {
+	//	ErrorDB := helpers.DBError(err)
+	//	helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+	//	return
+	//} else {
+	//	helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
+	//	return
+	//}
 }

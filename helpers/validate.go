@@ -37,6 +37,8 @@ func MessageForTag(fe validator.FieldError) string {
 		return "This field is short"
 	case "max":
 		return "This field is long"
+	case "len":
+		return "Invalid length"
 	}
 	return fe.Error()
 }
@@ -61,16 +63,22 @@ func MessageForTagDB(pgErr *pgconn.PgError) string {
 	return pgErr.Error()
 }
 
-func DBError(err error) interface{} {
+func DBError(err error) []FieldError {
+	var fieldErrors []FieldError
+	if err == nil {
+		return fieldErrors
+	}
 	var pgErr *pgconn.PgError
-	listError := make([]FieldError, 1)
+	//listError := make([]FieldError, 1)
 	if errors.As(err, &pgErr) {
 		//dictError := FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
 		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)} //Return ''
-		listError[0] = FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
-		return listError
+		//listError[0] = FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
+		fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)})
+		return fieldErrors
 	} else {
-		listError[0] = FieldError{Field: "Unknown", Message: err.Error()}
-		return listError
+		fieldErrors = append(fieldErrors, FieldError{Field: "Unknown", Message: err.Error()})
+		//listError[0] = FieldError{Field: "Unknown", Message: err.Error()}
+		return fieldErrors
 	}
 }
