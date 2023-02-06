@@ -38,14 +38,14 @@ docker compose up
 
 **Brand**
 
-| Method | Link        | Request         | Middleware     | Response | Description                                                  |
-|--------|-------------|-----------------|----------------|----------|--------------------------------------------------------------|
-| POST   | /brand      | Form-data, JSON | Token, isAdmin | 201      | Create a new brand                                           |
-| POST   | /brand/file | Form-data       | Token, isAdmin | 201      | Create brands with CSV file(at crawl_data/product/brand.csv) |
-| GET    | /brand      |                 | Token          | 200      | Get brands                                                   |
-| GET    | /brand/:id  |                 | Token          | 200      | Get a brand                                                  |
-| PUT    | /brand/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a brand                                               |
-| DELETE | /brand/:id  |                 | Token, isAdmin | 204      | Delete a brand                                               |
+| Method | Link        | Request         | Middleware     | Response | Description                                                   |
+|--------|-------------|-----------------|----------------|----------|---------------------------------------------------------------|
+| POST   | /brand      | Form-data, JSON | Token, isAdmin | 201      | Create a new brand                                            |
+| POST   | /brand/file | Form-data       | Token, isAdmin | 201      | Create brands with CSV file (at crawl_data/product/brand.csv) |
+| GET    | /brand      |                 | Token          | 200      | Get brands                                                    |
+| GET    | /brand/:id  |                 | Token          | 200      | Get a brand                                                   |
+| PUT    | /brand/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a brand                                                |
+| DELETE | /brand/:id  |                 | Token, isAdmin | 204      | Delete a brand                                                |
 
 **Product**
 
