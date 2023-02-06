@@ -4,21 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update Docker: docker compose up">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update Product: Write API create products with Excel file">
       <change afterPath="$PROJECT_DIR$/app/controller/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/models/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/Reponse.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/Reponse.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +131,8 @@
     <MESSAGE value="Update product: CRUD product" />
     <MESSAGE value="Update README.md: CRUD product" />
     <MESSAGE value="Update Docker: docker compose up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Docker: docker compose up" />
+    <MESSAGE value="Update Product: Write API create products with Excel file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update Product: Write API create products with Excel file" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

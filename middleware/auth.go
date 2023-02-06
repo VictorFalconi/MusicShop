@@ -92,6 +92,13 @@ func Middleware_IsAdmin() gin.HandlerFunc {
 	}
 }
 
+func CorsMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.Next()
+	}
+}
+
 // Login using username & password
 func BasicAuth(currUser models.LoginUser, user models.User, db *gorm.DB, ctx *gin.Context) (string, string, error) {
 	if err := db.Where("name = ?", currUser.Name).First(&user).Error; err != nil {

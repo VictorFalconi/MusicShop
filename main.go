@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/app/routes"
 	"server/config"
+	"server/middleware"
 )
 
 func init() {
@@ -13,6 +14,8 @@ func init() {
 
 func main() {
 	router := gin.New()
+	router.Use(middleware.CorsMiddleware())
+
 	routes.UserRouter(router)
 	routes.BrandRouter(router)
 	routes.ProductRouter(router)
