@@ -84,7 +84,7 @@ func Login(ctx *gin.Context) {
 				helpers.RespondJSON(ctx, 500, "Internal Server Error", errCreate.Error(), nil)
 				return
 			}
-			//Reponse token
+			//Repose token
 			ctx.SetSameSite(http.SameSiteLaxMode)
 			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
 			helpers.RespondJSON(ctx, 201, "Login successful!", nil, nil)
