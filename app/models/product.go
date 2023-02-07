@@ -11,7 +11,7 @@ import (
 type Product struct {
 	Id          uint    `json:"ID"          gorm:"primary_key"`
 	Name        string  `json:"name"        gorm:"unique;not null"          validate:"required,min=4,max=128"`
-	Amount      int     `json:"amount"      gorm:"not null;default:0"       validate:"required"`
+	Amount      int     `json:"amount"      gorm:"not null;default:0"       validate:""`
 	Price       float32 `json:"price"       gorm:"not null"                 validate:"required"`
 	Discount    float32 `json:"discount"    gorm:"not null;default:0.0"     validate:""`
 	Thumbnail   string  `json:"thumbnail"   gorm:""                         validate:""`
@@ -22,8 +22,8 @@ type Product struct {
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `            gorm:"index"`
 
-	Gallery Gallery `json:"gallery"         gorm:"foreignKey:ProductId;references:Id"` //Product 1-n Gallery
-	Brands  []Brand `json:"brands"          gorm:"many2many:product_brands"`           //Product n-n Brand
+	Galleries []Gallery `json:"galleries"       gorm:"foreignKey:ProductId;references:Id"` //Product 1-n Gallery
+	Brands    []Brand   `json:"brands"          gorm:"many2many:product_brands"`           //Product n-n Brand
 }
 
 func (currProduct *Product) UpdateStruct(newProduct *Product) {
@@ -35,12 +35,11 @@ func (currProduct *Product) UpdateStruct(newProduct *Product) {
 	currProduct.Description = newProduct.Description
 	currProduct.Year = newProduct.Year
 	currProduct.Quality = newProduct.Quality
-	currProduct.Gallery = newProduct.Gallery
 }
 
 type Gallery struct {
 	Id        uint   `json:"ID"          gorm:"primary_key"`
-	Thumbnail string `json:"thumbnail"   gorm:"not null"             validate:""`
+	Thumbnail string `json:"thumbnail"   gorm:"not null"             validate:"required"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`

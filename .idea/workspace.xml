@@ -10,11 +10,14 @@
       <change afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/brand.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/product.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/Reponse.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/Reponse.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

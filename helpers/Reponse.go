@@ -81,7 +81,7 @@ func String2Brands(str string) ([]models.Brand, []FieldError) {
 		if err := config.DB.Where("name = ?", name).First(&brand).Error; err == nil {
 			brands = append(brands, brand)
 		} else {
-			fielderrors = append(fielderrors, FieldError{Field: "Brand", Message: "Dont add " + name + " into Brand field !"})
+			fielderrors = append(fielderrors, FieldError{Field: "Brand", Message: "Dont add '" + name + "' into Brand field !"})
 		}
 	}
 	return brands, fielderrors

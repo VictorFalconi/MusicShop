@@ -26,8 +26,8 @@ func CreateBrand(ctx *gin.Context) {
 	}
 	// Create new Brand (Check validate Database)
 	if err := config.DB.Create(&brand).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
@@ -38,8 +38,8 @@ func CreateBrand(ctx *gin.Context) {
 func ReadBrands(ctx *gin.Context) {
 	var brands []models.Brand
 	if err := config.DB.Find(&brands).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 200, "Read brands successful!", nil, &brands)
@@ -77,8 +77,8 @@ func UpdateBrand(ctx *gin.Context) {
 	// Update
 	currBrand.Name = newBrand.Name
 	if err := config.DB.Save(&currBrand).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 200, "Updated brand successful!", nil, nil)
@@ -95,8 +95,8 @@ func DeleteBrand(ctx *gin.Context) {
 	}
 	// Delete
 	if err := config.DB.Delete(&currBrand).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 204, "Deleted brand successful!", nil, nil)
@@ -141,8 +141,8 @@ func CreateBrand_FromFile(ctx *gin.Context) {
 	}
 	// Create new Brands
 	if err := config.DB.Create(&brands).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)

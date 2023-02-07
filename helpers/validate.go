@@ -52,33 +52,34 @@ func ValidateErrors(errs validator.ValidationErrors) interface{} {
 }
 
 //Validate Database: Error Handling
-func MessageForTagDB(pgErr *pgconn.PgError) string {
+func MessageForTagDB(pgErr *pgconn.PgError) (int, string) {
 	switch pgErr.Code {
 	//Validate DB
 	case "23505":
-		return "This field is duplicate"
+		return 400, "This field is duplicate"
 	case "23503":
-		return "Item dont exist"
+		return 400, "Item doesn't exist"
+	case "42P01":
+		return 500, "Internal Server Error: Table doesn't exist"
 	}
-	return pgErr.Error()
+	return 400, pgErr.Error()
 }
 
-func DBError(err error) []FieldError {
+func DBError(err error) (int, []FieldError) {
 	var fieldErrors []FieldError
 	if err == nil {
-		return fieldErrors
+		return 400, fieldErrors
 	}
 	var pgErr *pgconn.PgError
 	//listError := make([]FieldError, 1)
 	if errors.As(err, &pgErr) {
-		//dictError := FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
+		StatusCode, MessageDB := MessageForTagDB(pgErr)
 		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)} //Return ''
-		//listError[0] = FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)}
-		fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageForTagDB(pgErr)})
-		return fieldErrors
+		fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageDB})
+		return StatusCode, fieldErrors
 	} else {
 		fieldErrors = append(fieldErrors, FieldError{Field: "Unknown", Message: err.Error()})
 		//listError[0] = FieldError{Field: "Unknown", Message: err.Error()}
-		return fieldErrors
+		return 400, fieldErrors
 	}
 }

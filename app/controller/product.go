@@ -31,8 +31,8 @@ func CreateProduct(ctx *gin.Context) {
 	}
 	// Create new Product (Check validate Database)
 	if err := config.DB.Create(&product).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 201, "Created product successful!", nil, nil)
@@ -42,9 +42,9 @@ func CreateProduct(ctx *gin.Context) {
 
 func ReadProducts(ctx *gin.Context) {
 	var products []models.Product
-	if err := config.DB.Preload("Brands").Find(&products).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+	if err := config.DB.Preload("Galleries").Preload("Brands").Find(&products).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 200, "Read products successful!", nil, &products)
@@ -54,7 +54,7 @@ func ReadProducts(ctx *gin.Context) {
 
 func ReadProduct(ctx *gin.Context) {
 	var product models.Product
-	if err := config.DB.Preload("Brands").Where("id = ?", ctx.Param("id")).First(&product).Error; err != nil {
+	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&product).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
 		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
 		return
@@ -67,7 +67,10 @@ func ReadProduct(ctx *gin.Context) {
 func UpdateProduct(ctx *gin.Context) {
 	// Find product
 	var currProduct models.Product
-	config.DB.Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct)
+	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
+		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		return
+	}
 	// Get request
 	var newProduct models.Product
 	if err := helpers.DataContentType(ctx, &newProduct); err != nil {
@@ -81,10 +84,11 @@ func UpdateProduct(ctx *gin.Context) {
 	}
 	// Update
 	currProduct.UpdateStruct(&newProduct)
+	config.DB.Model(&currProduct).Association("Galleries").Replace(newProduct.Galleries)
 	config.DB.Model(&currProduct).Association("Brands").Replace(newProduct.Brands)
 	if err := config.DB.Save(&currProduct).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 200, "Updated product successful!", nil, nil)
@@ -95,14 +99,14 @@ func UpdateProduct(ctx *gin.Context) {
 func DeleteProduct(ctx *gin.Context) {
 	// Find Product
 	var currProduct models.Product
-	if err := config.DB.Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
+	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
 		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
 		return
 	}
 	// Delete
 	if err := config.DB.Delete(&currProduct).Error; err != nil {
-		ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
 		helpers.RespondJSON(ctx, 204, "Deleted product successful!", nil, nil)
@@ -164,7 +168,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 
 		// Create new Product
 		if errdb := config.DB.Create(&product).Error; errdb != nil || len(fieldErrorBrands) != 0 {
-			ErrorDB := helpers.DBError(errdb)
+			_, ErrorDB := helpers.DBError(errdb)
 			lineErr := helpers.LineError{
 				Line:    i + 1,
 				Message: append(ErrorDB, fieldErrorBrands...)}
@@ -175,7 +179,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 			galleries = helpers.String2Galleries(row[6], product.Id)
 			if len(galleries) != 0 {
 				if errGaleery := config.DB.Create(&galleries).Error; errGaleery != nil {
-					ErrorDB := helpers.DBError(errGaleery)
+					_, ErrorDB := helpers.DBError(errGaleery)
 					lineErr := helpers.LineError{
 						Line:    i + 1,
 						Message: ErrorDB}
