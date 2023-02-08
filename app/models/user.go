@@ -20,7 +20,7 @@ type User struct {
 	Id          uint   `json:"ID"           form:"ID"           gorm:"primary_key" `
 	Name        string `json:"name"         form:"name"         gorm:"unique;not null" validate:"required,min=4,max=32"`
 	Email       string `json:"email"        form:"email"        gorm:"unique"          validate:"required,email,min=4,max=32"`
-	PhoneNumber string `json:"phone_number" form:"phone_number" gorm:"unique"          validate:"required,len=10"`
+	PhoneNumber string `json:"phonenumber" form:"phonenumber" gorm:"unique"          validate:"required,len=10"`
 	Password    string `json:"password"     form:"password"     gorm:"not null"        validate:"required,min=4,max=32"`
 	Address     string `json:"address"      form:"address"      gorm:""                validate:""`
 	CreatedAt   time.Time

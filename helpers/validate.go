@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgconn"
+	"regexp"
+	"strings"
 )
 
 //Data Type: Get multiple data type form client (form-data, XML, JSON)
@@ -46,7 +48,7 @@ func MessageForTag(fe validator.FieldError) string {
 func ValidateErrors(errs validator.ValidationErrors) interface{} {
 	listErrors := make([]FieldError, len(errs))
 	for index, e := range errs {
-		listErrors[index] = FieldError{Field: e.Field(), Message: MessageForTag(e)}
+		listErrors[index] = FieldError{Field: strings.ToLower(e.Field()), Message: MessageForTag(e)}
 	}
 	return listErrors
 }
@@ -70,16 +72,27 @@ func DBError(err error) (int, []FieldError) {
 	if err == nil {
 		return 400, fieldErrors
 	}
+
 	var pgErr *pgconn.PgError
-	//listError := make([]FieldError, 1)
+
 	if errors.As(err, &pgErr) {
+		//fmt.Printf("%#v", pgErr)
 		StatusCode, MessageDB := MessageForTagDB(pgErr)
 		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)} //Return ''
-		fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageDB})
+		//fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageDB})
+		fieldErrors = append(fieldErrors, FieldError{Field: Detail2ColumnName(pgErr.Detail), Message: MessageDB})
 		return StatusCode, fieldErrors
 	} else {
 		fieldErrors = append(fieldErrors, FieldError{Field: "Unknown", Message: err.Error()})
-		//listError[0] = FieldError{Field: "Unknown", Message: err.Error()}
 		return 400, fieldErrors
 	}
+}
+
+func Detail2ColumnName(str string) string {
+	if str == "" {
+		return str
+	}
+	re := regexp.MustCompile(`Key \(([^\)]+)\)=\(([^\)]+)\)`)
+	match := re.FindStringSubmatch(str)
+	return match[1]
 }

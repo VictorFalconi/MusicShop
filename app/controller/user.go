@@ -29,7 +29,7 @@ func Register(ctx *gin.Context) {
 	// Set role for user
 	if err := user.SetUserRole(config.DB, "user"); err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil) // Hiện 3 lỗi khi nhập trùng cả 3 fields
+		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	}
 	// Hash password
@@ -39,7 +39,7 @@ func Register(ctx *gin.Context) {
 	}
 	// Create new User (Check validate Database)
 	if err := config.DB.Create(&user).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
+		statusCode, ErrorDB := helpers.DBError(err) // Hiện 3 lỗi khi nhập trùng cả 3 fields
 		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
 		return
 	} else {
@@ -95,6 +95,7 @@ func Login(ctx *gin.Context) {
 
 // Update user
 
+// Compare Token
 func AuthenticToken(ctx *gin.Context) {
 	//Get token
 	bearerToken := ctx.Request.Header.Get("Authorization")

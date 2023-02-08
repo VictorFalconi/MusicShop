@@ -18,6 +18,7 @@ Build CRUD website with golang, postgresql and deploy on docker
 - [gin](https://github.com/gin-gonic/gin)
 - [validator](https://github.com/go-playground/validator)
 - [jwt](https://github.com/golang-jwt/jwt)
+- [excelize](https://github.com/qax-os/excelize)
 
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
 
