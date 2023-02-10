@@ -51,7 +51,7 @@ func ConnectDB() {
 	fmt.Println("Migration complete")
 	DB = db
 
-	// Create "admin, employee, user" role
+	// Create "admin, user, employee" role
 	if errRole := Init_Role(); errRole != nil {
 		fmt.Println("Dont create role")
 	}
