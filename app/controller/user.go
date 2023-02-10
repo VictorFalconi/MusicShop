@@ -87,7 +87,7 @@ func Login(ctx *gin.Context) {
 			//Repose token
 			ctx.SetSameSite(http.SameSiteLaxMode)
 			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
-			helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(200), nil, nil)
+			helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
 			return
 		}
 	}
