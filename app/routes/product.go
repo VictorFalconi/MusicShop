@@ -8,18 +8,18 @@ import (
 
 func ProductRouter(router *gin.Engine) {
 	router.Use(middleware.CorsMiddleware())
-	router.Use(middleware.Middleware_Authentic())
+	router.Use(middleware.AuthMiddleware())
 
-	router.POST("/product", middleware.Middleware_IsAdmin(), controller.CreateProduct)
+	router.POST("/product", middleware.AdminMiddleware(), controller.CreateProduct)
 	router.GET("/product", controller.ReadProducts)
 	router.GET("/product/:id", controller.ReadProduct)
-	router.PUT("/product/:id", middleware.Middleware_IsAdmin(), controller.UpdateProduct)
-	router.DELETE("/product/:id", middleware.Middleware_IsAdmin(), controller.DeleteProduct)
-	router.POST("/product/file", middleware.Middleware_IsAdmin(), controller.CreateProduct_FromFile)
+	router.PUT("/product/:id", middleware.AdminMiddleware(), controller.UpdateProduct)
+	router.DELETE("/product/:id", middleware.AdminMiddleware(), controller.DeleteProduct)
+	router.POST("/product/file", middleware.AdminMiddleware(), controller.CreateProduct_FromFile)
 }
 
 func GalleryRouter(router *gin.Engine) {
-	router.Use(middleware.Middleware_Authentic())
+	router.Use(middleware.AdminMiddleware())
 
 	//router.POST("/gallery", middleware.Middleware_IsAdmin(), controller.CreateGallery)
 	//router.GET("/gallery", controller.ReadGalleries)
