@@ -34,11 +34,19 @@ type LineError struct {
 
 // String to float
 func String2Float(str string) float32 {
-	fPrice, err := strconv.ParseFloat(str, 64)
+	num, err := strconv.ParseFloat(str, 64)
 	if err != nil {
-		fPrice = 0.0
+		num = 0.0
 	}
-	return float32(fPrice)
+	return float32(num)
+}
+
+func String2Int(str string) int {
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		num = 0
+	}
+	return int(num)
 }
 
 // String to entity "LB CLUB, Wanner Music VN" -> []Brand{}

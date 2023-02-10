@@ -2,12 +2,42 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgconn"
 	"regexp"
 	"strings"
 )
+
+// StatusCode
+func StatusCodeFromInt(value int) string {
+	switch value {
+	case 200:
+		return "The request was successful"
+	case 201:
+		return "The new resource has been created"
+	case 204:
+		return "This resource has been deleted"
+	case 207:
+		return "The request was successful, but some resource is error"
+	case 400:
+		return "The request was invalid"
+	case 401:
+		return "The request requires authentication"
+	case 403:
+		return "The request not authorized"
+	case 404:
+		return "URL not found"
+	case 500:
+		return "Internal Server Error"
+	case 502:
+		return "Bad Gateway"
+	case 503:
+		return "The server is currently unavailable"
+	}
+	return "Status code: " + string(value)
+}
 
 //Data Type: Get multiple data type form client (form-data, XML, JSON)
 func DataContentType(ctx *gin.Context, entity interface{}) error {
@@ -62,7 +92,7 @@ func MessageForTagDB(pgErr *pgconn.PgError) (int, string) {
 	case "23503":
 		return 400, "Item doesn't exist"
 	case "42P01":
-		return 500, "Internal Server Error: Table doesn't exist"
+		return 500, "Table doesn't exist"
 	}
 	return 400, pgErr.Error()
 }
@@ -94,5 +124,10 @@ func Detail2ColumnName(str string) string {
 	}
 	re := regexp.MustCompile(`Key \(([^\)]+)\)=\(([^\)]+)\)`)
 	match := re.FindStringSubmatch(str)
-	return match[1]
+	if len(match) == 3 {
+		return match[1]
+	} else {
+		fmt.Println(str)
+		return "Unknown"
+	}
 }

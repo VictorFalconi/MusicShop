@@ -4,20 +4,25 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update helper: add status">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update helper, validate: respose true field in entity">
       <change afterPath="$PROJECT_DIR$/app/controller/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/models/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/brand.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/product.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/brand.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/Reponse.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/Reponse.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Web Online MusicShop.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Web Online MusicShop.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,25 +103,6 @@
       <recent name="C:\Users\Liem\Desktop\MusicShop\server" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
-      <module name="server" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
-      <module name="server" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="DIRECTORY" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
@@ -157,7 +143,8 @@
     <MESSAGE value="Update Product: Write API create products with Excel file" />
     <MESSAGE value="Update Middleware: Import CORS" />
     <MESSAGE value="Update helper: add status" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update helper: add status" />
+    <MESSAGE value="Update helper, validate: respose true field in entity" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update helper, validate: respose true field in entity" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
