@@ -30,43 +30,51 @@ type User struct {
 	RoleId uint
 }
 
+func (currUser *User) UpdateStruct(newUser *User) {
+	//currUser.Name = newUser.Name
+	currUser.Email = newUser.Email
+	currUser.PhoneNumber = newUser.PhoneNumber
+	currUser.Password = newUser.Password
+	currUser.Address = newUser.Address
+}
+
 type LoginUser struct {
 	Name     string `json:"name"     form:"name"     validate:"required,min=4,max=32"`
 	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
 }
 
 // Get Name_Role of User
-func (u *User) GetNameRoleUser(db *gorm.DB) (error, string) {
+func (currUser *User) GetNameRoleUser(db *gorm.DB) (error, string) {
 	var role Role
-	if err := db.Where("id = ?", u.RoleId).First(&role).Error; err != nil {
+	if err := db.Where("id = ?", currUser.RoleId).First(&role).Error; err != nil {
 		return err, ""
 	}
 	return nil, role.Name
 }
 
 // Set Role of User form Name_Role:
-func (u *User) SetUserRole(db *gorm.DB, roleName string) error {
+func (currUser *User) SetUserRole(db *gorm.DB, roleName string) error {
 	var role Role
 	if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {
 		return err
 	}
-	u.RoleId = role.Id
+	currUser.RoleId = role.Id
 	return nil
 }
 
 // HashPassword :
-func (u *User) HashPassword() error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+func (currUser *User) HashPassword() error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(currUser.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	u.Password = string(hashedPassword)
+	currUser.Password = string(hashedPassword)
 	return nil
 }
 
 // ComparePassword : Compare between password and HashPassword
-func (u *User) ComparePassword(password string) bool {
-	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)); err != nil {
+func (currUser *User) ComparePassword(password string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(currUser.Password), []byte(password)); err != nil {
 		return false
 	}
 	return true
