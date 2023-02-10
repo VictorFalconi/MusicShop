@@ -13,7 +13,6 @@ func init() {
 
 func main() {
 	router := gin.New()
-	//router.Use(middleware.CorsMiddleware())
 
 	routes.UserRouter(router)
 	routes.BrandRouter(router)

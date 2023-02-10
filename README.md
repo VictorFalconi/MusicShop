@@ -36,7 +36,7 @@ docker compose up
 |--------|----------------|-----------------|------------|----------|--------------------------------------------|
 | POST   | /user/register | Form-data, JSON |            | 201      | Create a new "user" with rolename = user   |
 | POST   | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token) |
-| PUT    | /user          | Form-data, JSON |            | 200      | Update a user                              |
+| PUT    | /user          | Form-data, JSON | Token      | 200      | Update a user                              |
 
 **Brand**
 
