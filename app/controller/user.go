@@ -17,33 +17,33 @@ func Register(ctx *gin.Context) {
 	var user models.User
 	// Check data type
 	if err := helpers.DataContentType(ctx, &user); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 	// Check validate field     //Thiếu 2 cái: nhập dư field k có trong user; nhập trùng 2 field giống nhau
 	if err := validator.New().Struct(&user); err != nil {
 		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
 	// Set role for user
 	if err := user.SetUserRole(config.DB, "user"); err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	}
 	// Hash password
 	if err := user.HashPassword(); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error Field", "Cant Hash Password", nil)
+		helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), "Cant Hash Password", nil)
 		return
 	}
 	// Create new User (Check validate Database)
 	if err := config.DB.Create(&user).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err) // Hiện 3 lỗi khi nhập trùng cả 3 fields
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 201, "Created user successful!", nil, nil)
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
 }
@@ -52,13 +52,13 @@ func Register(ctx *gin.Context) {
 func Login(ctx *gin.Context) {
 	var currUser models.LoginUser
 	if err := helpers.DataContentType(ctx, &currUser); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 	validate := validator.New()
 	if err := validate.Struct(&currUser); err != nil {
 		dictErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, "Error validate!", dictErrors, nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), dictErrors, nil)
 		return
 	}
 	// Check Field "name" in db
@@ -67,7 +67,7 @@ func Login(ctx *gin.Context) {
 		var fieldErrors []helpers.FieldError
 		fieldError := helpers.FieldError{Field: "name", Message: "Name isn't already exist"}
 		fieldErrors = append(fieldErrors, fieldError)
-		helpers.RespondJSON(ctx, 400, "Incorrect Filed", fieldErrors, nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), fieldErrors, nil)
 		return
 	} else {
 		// Compare password
@@ -75,25 +75,54 @@ func Login(ctx *gin.Context) {
 			var fieldErrors []helpers.FieldError
 			fieldError := helpers.FieldError{Field: "password", Message: "Incorrect Password"}
 			fieldErrors = append(fieldErrors, fieldError)
-			helpers.RespondJSON(ctx, 400, "Incorrect Filed", fieldErrors, nil)
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), fieldErrors, nil)
 			return
 		} else {
 			//Create token
 			token, errCreate := middleware.CreateToken(user.Id)
 			if errCreate != nil {
-				helpers.RespondJSON(ctx, 500, "Internal Server Error", errCreate.Error(), nil)
+				helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), errCreate.Error(), nil)
 				return
 			}
 			//Repose token
 			ctx.SetSameSite(http.SameSiteLaxMode)
 			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
-			helpers.RespondJSON(ctx, 201, "Login successful!", nil, nil)
+			helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 			return
 		}
 	}
 }
 
 // Update user
+func UpdateUser(ctx *gin.Context) {
+	// Current User
+	currUser := ctx.MustGet("user").(models.User)
+	// Get request
+	var newUser models.User
+	if err := helpers.DataContentType(ctx, &newUser); err != nil {
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+		return
+	}
+	if err := validator.New().Struct(&newUser); err != nil {
+		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
+		return
+	}
+	// Update & Hash password
+	currUser.UpdateStruct(&newUser)
+	if err := currUser.HashPassword(); err != nil {
+		helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), "Cant Hash Password", nil)
+		return
+	}
+	if err := config.DB.Save(&currUser).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
+		return
+	} else {
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
+		return
+	}
+}
 
 // Compare Token
 func AuthenticToken(ctx *gin.Context) {
@@ -107,18 +136,18 @@ func AuthenticToken(ctx *gin.Context) {
 			// Query User from id
 			var user models.User
 			if errDB := config.DB.Where("id = ?", claims["id"]).First(&user).Error; errDB == nil {
-				helpers.RespondJSON(ctx, 200, "Validate token successful!", nil, &user)
+				helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &user)
 				return
 			} else {
-				helpers.RespondJSON(ctx, 400, "User doesn't exist", errDB.Error(), &user)
+				helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), errDB.Error(), &user)
 				return
 			}
 		} else {
-			helpers.RespondJSON(ctx, 401, "Failed to validate token", err.Error(), nil)
+			helpers.RespondJSON(ctx, 401, helpers.StatusCodeFromInt(401), err.Error(), nil)
 			return
 		}
 	} else {
-		helpers.RespondJSON(ctx, 400, "Failed to process request", "No token found", nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), "No token found", nil)
 		return
 	}
 }

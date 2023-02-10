@@ -10,6 +10,7 @@ import (
 	"io"
 	"log"
 	"path/filepath"
+	"reflect"
 	"server/app/models"
 	"server/config"
 	"server/helpers"
@@ -20,22 +21,22 @@ func CreateProduct(ctx *gin.Context) {
 	var product models.Product
 	// Check data type
 	if err := helpers.DataContentType(ctx, &product); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 	// Check validate field
 	if err := validator.New().Struct(&product); err != nil {
 		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
 	// Create new Product (Check validate Database)
 	if err := config.DB.Create(&product).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 201, "Created product successful!", nil, nil)
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
 }
@@ -44,10 +45,10 @@ func ReadProducts(ctx *gin.Context) {
 	var products []models.Product
 	if err := config.DB.Preload("Galleries").Preload("Brands").Find(&products).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 200, "Read products successful!", nil, &products)
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &products)
 		return
 	}
 }
@@ -56,10 +57,10 @@ func ReadProduct(ctx *gin.Context) {
 	var product models.Product
 	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&product).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 200, "Read product successful!", nil, &product)
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &product)
 		return
 	}
 }
@@ -68,18 +69,18 @@ func UpdateProduct(ctx *gin.Context) {
 	// Find product
 	var currProduct models.Product
 	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
-		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
 		return
 	}
 	// Get request
 	var newProduct models.Product
 	if err := helpers.DataContentType(ctx, &newProduct); err != nil {
-		helpers.RespondJSON(ctx, 400, "Error data type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 	if err := validator.New().Struct(&newProduct); err != nil {
 		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, "Errors validate!", listErrors, nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
 	// Update
@@ -88,10 +89,10 @@ func UpdateProduct(ctx *gin.Context) {
 	config.DB.Model(&currProduct).Association("Brands").Replace(newProduct.Brands)
 	if err := config.DB.Save(&currProduct).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 200, "Updated product successful!", nil, nil)
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
 		return
 	}
 }
@@ -100,16 +101,16 @@ func DeleteProduct(ctx *gin.Context) {
 	// Find Product
 	var currProduct models.Product
 	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
-		helpers.RespondJSON(ctx, 404, "Error URL", "URL not found", nil)
+		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
 		return
 	}
 	// Delete
 	if err := config.DB.Delete(&currProduct).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, "Error Database", ErrorDB, nil)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 204, "Deleted product successful!", nil, nil)
+		helpers.RespondJSON(ctx, 204, helpers.StatusCodeFromInt(204), nil, nil)
 		return
 	}
 }
@@ -118,17 +119,17 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 	// Read file
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 
 	if filepath.Ext(file.Filename) != ".xlsx" {
-		helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must Excel (xlsx)", nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), "Type file is must Excel (xlsx)", nil)
 		return
 	}
 	src, err := file.Open()
 	if err != nil {
-		helpers.RespondJSON(ctx, 400, "Error type!", "Dont read this", nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), "Dont read this", nil)
 		return
 	}
 	defer src.Close()
@@ -139,13 +140,13 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 	// Read Excel file
 	xlsx, err := excelize.OpenReader(&buf)
 	if err != nil {
-		helpers.RespondJSON(ctx, 500, "Error file!", "Internal Server Error: "+err.Error(), nil)
+		helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), err.Error(), nil)
 		return
 	}
 	// Get all the rows in the first sheet
 	rows, err := xlsx.GetRows("Sheet1")
 	if err != nil {
-		helpers.RespondJSON(ctx, 500, "Error file!", "Internal Server Error: "+err.Error(), nil)
+		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
 	}
 
@@ -154,16 +155,25 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		if i == 0 {
 			continue
 		}
+		// Len of row
+		numField := reflect.ValueOf(models.Product{}).NumField()
+		log.Println(numField, len(row), row)
+		if len(row) != (numField - 4) { // ID, Amount, Discount, CUD time
+			listDataErr = append(listDataErr, helpers.LineError{Line: i + 1, Message: "Invalid length or empty field"})
+			continue
+		}
 
-		brands, fieldErrorBrands := helpers.String2Brands(row[7])
+		brands, fieldErrorBrands := helpers.String2Brands(row[9])
 		product := models.Product{
 			Name:        row[0],
-			Price:       helpers.String2Float(row[1]),
-			Thumbnail:   row[2],
-			Description: row[3],
-			Year:        row[4],
-			Quality:     row[5],
-			//Gallery:   (row[6]),
+			Amount:      helpers.String2Int(row[1]),
+			Price:       helpers.String2Float(row[2]),
+			Discount:    helpers.String2Float(row[3]),
+			Thumbnail:   row[4],
+			Description: row[5],
+			Year:        row[6],
+			Quality:     row[7],
+			//Gallery:   (row[8]),
 			Brands: brands}
 
 		// Create new Product
@@ -176,7 +186,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		} else {
 			// Create Galleries for Product
 			var galleries []models.Gallery
-			galleries = helpers.String2Galleries(row[6], product.Id)
+			galleries = helpers.String2Galleries(row[8], product.Id)
 			if len(galleries) != 0 {
 				if errGaleery := config.DB.Create(&galleries).Error; errGaleery != nil {
 					_, ErrorDB := helpers.DBError(errGaleery)
@@ -189,10 +199,10 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		}
 	}
 	if len(listDataErr) != 0 {
-		helpers.RespondJSON(ctx, 207, "Created some products successful!", nil, listDataErr)
+		helpers.RespondJSON(ctx, 207, helpers.StatusCodeFromInt(207), nil, listDataErr)
 		return
 	} else {
-		helpers.RespondJSON(ctx, 201, "Created all products successful!", nil, nil)
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
 }

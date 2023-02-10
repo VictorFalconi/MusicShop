@@ -13,6 +13,22 @@ import (
 	"time"
 )
 
+// CORS
+func CorsMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if ctx.Request.Method == "OPTIONS" {
+			ctx.AbortWithStatus(204)
+			return
+		}
+		ctx.Next()
+	}
+}
+
 func CreateToken(id uint) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
@@ -32,32 +48,43 @@ func ValidateToken(token string) (*jwt.Token, error) {
 	})
 }
 
+func GetUserFromToken(token *jwt.Token) (interface{}, error) {
+	claims := token.Claims.(jwt.MapClaims)
+	// Query User from id
+	var user models.User
+	if err := config.DB.Where("id = ?", claims["id"]).First(&user).Error; err != nil {
+		return nil, err
+	} else {
+		return user, nil
+	}
+}
+
 // Authenticaton: Xác thực người dùng
-func Middleware_Authentic() gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		//Get token
 		bearerToken := ctx.Request.Header.Get("Authorization")
 		if len(strings.Split(bearerToken, " ")) == 2 {
 			//Validate token
 			token, err := ValidateToken(strings.Split(bearerToken, " ")[1])
-			if token.Valid && err == nil {
-				claims := token.Claims.(jwt.MapClaims)
-				// Query User from id
-				var user models.User
-				if errDB := config.DB.Where("id = ?", claims["id"]).First(&user).Error; errDB == nil {
+			if token.Valid && err == nil { // thiếu nhap random token thi error
+				user, errDB := GetUserFromToken(token)
+				if errDB == nil {
+					ctx.Set("user", user)
 					ctx.Next()
 				} else {
-					helpers.RespondJSON(ctx, 400, "User doesn't exist", errDB.Error(), &user)
+					status, ErrorDB := helpers.DBError(errDB)
+					helpers.RespondJSON(ctx, status, helpers.StatusCodeFromInt(status), ErrorDB, nil)
 					ctx.Abort()
 					return
 				}
 			} else {
-				helpers.RespondJSON(ctx, 401, "Failed to validate token", err.Error(), nil)
+				helpers.RespondJSON(ctx, 401, helpers.StatusCodeFromInt(401), err.Error(), nil)
 				ctx.Abort()
 				return
 			}
 		} else {
-			helpers.RespondJSON(ctx, 400, "Failed to process request", "No token found", nil)
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), "No token found", nil)
 			ctx.Abort()
 			return
 		}
@@ -65,46 +92,18 @@ func Middleware_Authentic() gin.HandlerFunc {
 }
 
 // Authorization: Ủy quyền người dùng
-func Middleware_IsAdmin() gin.HandlerFunc {
+func AdminMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		//Get token
-		bearerToken := ctx.Request.Header.Get("Authorization")
-		if len(strings.Split(bearerToken, " ")) == 2 {
-			//Validate token
-			token, err := ValidateToken(strings.Split(bearerToken, " ")[1])
-			if token.Valid && err == nil {
-				claims := token.Claims.(jwt.MapClaims)
-				// Query User from id
-				var user models.User
-				if errDB := config.DB.Where("id = ?", claims["id"]).First(&user).Error; errDB == nil {
-					// Find role of account is "admin"
-					errName, RoleName := user.GetNameRoleUser(config.DB)
-					if errName == nil && RoleName == "admin" {
-						ctx.Next()
-					} else {
-						helpers.RespondJSON(ctx, 403, "Error Authorization", "Account is not authorized, You are not admin", nil)
-						ctx.Abort()
-						return
-					}
-				}
-			}
-		}
-	}
-}
-
-func CorsMiddleware() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
-
-		if ctx.Request.Method == "OPTIONS" {
-			ctx.AbortWithStatus(204)
+		user := ctx.MustGet("user").(models.User)
+		// Find role of account is "admin"
+		errName, RoleName := user.GetNameRoleUser(config.DB)
+		if errName == nil && RoleName == "admin" {
+			ctx.Next()
+		} else {
+			helpers.RespondJSON(ctx, 403, helpers.StatusCodeFromInt(403), "Account is not authorized, You are not admin", nil)
+			ctx.Abort()
 			return
 		}
-
-		ctx.Next()
 	}
 }
 
