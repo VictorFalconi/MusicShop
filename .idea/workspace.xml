@@ -4,17 +4,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update status code">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update : API Update a user">
       <change afterPath="$PROJECT_DIR$/app/controller/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/models/order.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/images/Web Online MusicShop.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Web Online MusicShop.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +111,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update token controller" />
     <MESSAGE value="Update AuthorizeToken controller" />
     <MESSAGE value="Update README.md, docker-compose.yml" />
     <MESSAGE value="Update Reponse.go, controller/user.go : Validate Database" />
@@ -136,7 +135,8 @@
     <MESSAGE value="Custom" />
     <MESSAGE value="Update : CORS, authen &amp; author" />
     <MESSAGE value="Update status code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update status code" />
+    <MESSAGE value="Update : API Update a user" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update : API Update a user" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

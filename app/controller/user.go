@@ -87,10 +87,18 @@ func Login(ctx *gin.Context) {
 			//Repose token
 			ctx.SetSameSite(http.SameSiteLaxMode)
 			ctx.SetCookie("Authorization", token, 3600*12, "", "", false, true)
-			helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
+			helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(200), nil, nil)
 			return
 		}
 	}
+}
+
+// ReadUser
+func ReadUser(ctx *gin.Context) {
+	// Get User from Token
+	user := ctx.MustGet("user").(models.User)
+	helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, user.ReadUser())
+	return
 }
 
 // Update user
