@@ -166,7 +166,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		brands, fieldErrorBrands := helpers.String2Brands(row[9])
 		product := models.Product{
 			Name:        row[0],
-			Amount:      helpers.String2Int(row[1]),
+			Quantity:    helpers.String2Int(row[1]),
 			Price:       helpers.String2Float(row[2]),
 			Discount:    helpers.String2Float(row[3]),
 			Thumbnail:   row[4],
