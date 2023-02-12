@@ -20,7 +20,7 @@ type User struct {
 	Id          uint   `json:"ID"           form:"ID"           gorm:"primary_key" `
 	Name        string `json:"name"         form:"name"         gorm:"unique;not null" validate:"required,min=4,max=32"`
 	Email       string `json:"email"        form:"email"        gorm:"unique"          validate:"required,email,min=4,max=32"`
-	PhoneNumber string `json:"phonenumber" form:"phonenumber" gorm:"unique"          validate:"required,len=10"`
+	PhoneNumber string `json:"phonenumber"  form:"phonenumber"  gorm:"unique"          validate:"required,len=10"`
 	Password    string `json:"password"     form:"password"     gorm:"not null"        validate:"required,min=4,max=32"`
 	Address     string `json:"address"      form:"address"      gorm:""                validate:""`
 	CreatedAt   time.Time
@@ -28,6 +28,20 @@ type User struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 
 	RoleId uint
+
+	Orders []Order `gorm:"foreignKey:UserId;references:Id"` //user 1-n order
+
+}
+
+type ReadUser struct {
+	Name        string
+	Email       string
+	PhoneNumber string
+	Address     string
+}
+
+func (u *User) ReadUser() interface{} {
+	return ReadUser{Name: u.Name, Email: u.Email, PhoneNumber: u.PhoneNumber, Address: u.Address}
 }
 
 func (currUser *User) UpdateStruct(newUser *User) {

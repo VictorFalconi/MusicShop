@@ -10,8 +10,13 @@
       <change afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/product.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Web Online MusicShop.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Web Online MusicShop.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +96,25 @@
       <recent name="C:\Users\Liem\Desktop\MusicShop\server\app_2\user" />
       <recent name="C:\Users\Liem\Desktop\MusicShop\server" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="server" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">

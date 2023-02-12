@@ -17,14 +17,3 @@ func ProductRouter(router *gin.Engine) {
 	router.DELETE("/product/:id", middleware.AdminMiddleware(), controller.DeleteProduct)
 	router.POST("/product/file", middleware.AdminMiddleware(), controller.CreateProduct_FromFile)
 }
-
-func GalleryRouter(router *gin.Engine) {
-	router.Use(middleware.AdminMiddleware())
-
-	//router.POST("/gallery", middleware.Middleware_IsAdmin(), controller.CreateGallery)
-	//router.GET("/gallery", controller.ReadGalleries)
-	//router.GET("/gallery/:id", controller.ReadGallery)
-	//router.PUT("/gallery/:id", middleware.Middleware_IsAdmin(), controller.UpdateGallery)
-	//router.DELETE("/gallery/:id", middleware.Middleware_IsAdmin(), controller.DeleteGallery)
-	//router.POST("/gallery/file", middleware.Middleware_IsAdmin(), controller.CreateGallery_FromFile)
-}

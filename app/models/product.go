@@ -11,7 +11,7 @@ import (
 type Product struct {
 	Id          uint    `json:"ID"          gorm:"primary_key"`
 	Name        string  `json:"name"        gorm:"unique;not null"          validate:"required,min=4,max=128"`
-	Amount      int     `json:"amount"      gorm:"not null;default:0"       validate:""`
+	Quantity    int     `json:"quantity"    gorm:"not null;default:0"       validate:""`
 	Price       float32 `json:"price"       gorm:"not null"                 validate:"required"`
 	Discount    float32 `json:"discount"    gorm:"not null;default:0.0"     validate:""`
 	Thumbnail   string  `json:"thumbnail"   gorm:""                         validate:""`
@@ -28,7 +28,7 @@ type Product struct {
 
 func (currProduct *Product) UpdateStruct(newProduct *Product) {
 	currProduct.Name = newProduct.Name
-	currProduct.Amount = newProduct.Amount
+	currProduct.Quantity = newProduct.Quantity
 	currProduct.Price = newProduct.Price
 	currProduct.Discount = newProduct.Discount
 	currProduct.Thumbnail = newProduct.Thumbnail
