@@ -63,10 +63,14 @@ docker compose up
 
 **Order**
 
-| Method | Link       | Request         | Middleware    | Response | Description        |
-|--------|------------|-----------------|---------------|----------|--------------------|
-| POST   | /order     | Form-data, JSON | Auth          | 201      | Create a new order |
-| GET    | /order     |                 | Auth, isAdmin | 200      | Get orders         |
-| GET    | /order/:id |                 | Auth          | 200      | Get a order        |
-| PUT    | /order/:id | Form-data, JSON | Auth, isAdmin | 200      | Update a order     |
-| DELETE | /order/:id |                 | Auth          | 204      | Delete a order     |
+| Method | Link              | Request         | Middleware    | Response | Description                                    |
+|--------|-------------------|-----------------|---------------|----------|------------------------------------------------|
+| User   |
+| POST   | /order            | Form-data, JSON | Auth          | 201      | Create a new order                             |
+| GET    | /order/:id        |                 | Auth          | 200      | Get a order of user                            |
+| GET    | /order            |                 | Auth          | 200      | Get orders of user                             |
+| PUT    | /order/:id        |                 | Auth          | 200      | Cancel a order of user                         |
+| Admin  |
+| GET    | /orders           |                 | Auth, isAdmin | 200      | Get orders of users                            |
+| PUT    | /accept_order/:id |                 | Auth, isAdmin | 200      | Accept a order of user                         |
+| PUT    | /cancel_order/:id |                 | Auth, isAdmin | 200      | Cancel a order of user with all type of status |

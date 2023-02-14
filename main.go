@@ -17,7 +17,7 @@ func main() {
 	routes.UserRouter(router)
 	routes.BrandRouter(router)
 	routes.ProductRouter(router)
-	routes.GalleryRouter(router)
+	routes.OrderRouter(router)
 
 	router.Run()
 }
