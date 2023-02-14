@@ -83,10 +83,19 @@ func UpdateProduct(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
-	// Update
+	// Map
 	currProduct.UpdateStruct(&newProduct)
-	config.DB.Model(&currProduct).Association("Galleries").Replace(newProduct.Galleries)
-	config.DB.Model(&currProduct).Association("Brands").Replace(newProduct.Brands)
+	// Update
+	if err := config.DB.Model(&currProduct).Association("Galleries").Replace(newProduct.Galleries); err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
+		return
+	}
+	if err := config.DB.Model(&currProduct).Association("Brands").Replace(newProduct.Brands); err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
+		return
+	}
 	if err := config.DB.Save(&currProduct).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
 		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
