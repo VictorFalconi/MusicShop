@@ -35,27 +35,38 @@ docker compose up
 | Method | Link           | Request         | Middleware | Response | Description                                |
 |--------|----------------|-----------------|------------|----------|--------------------------------------------|
 | POST   | /user/register | Form-data, JSON |            | 201      | Create a new "user" with rolename = user   |
-| POST   | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token) |
-| PUT    | /user          | Form-data, JSON | Token      | 200      | Update a user                              |
+| GET    | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token) |
+| GET    | /user          |                 | Auth       | 200      | Read information of a user                 |
+| PUT    | /user          | Form-data, JSON | Auth       | 200      | Update a user                              |
 
 **Brand**
 
-| Method | Link        | Request         | Middleware     | Response | Description                                                   |
-|--------|-------------|-----------------|----------------|----------|---------------------------------------------------------------|
-| POST   | /brand      | Form-data, JSON | Token, isAdmin | 201      | Create a new brand                                            |
-| POST   | /brand/file | Form-data       | Token, isAdmin | 201      | Create brands with CSV file (at crawl_data/product/brand.csv) |
-| GET    | /brand      |                 | Token          | 200      | Get brands                                                    |
-| GET    | /brand/:id  |                 | Token          | 200      | Get a brand                                                   |
-| PUT    | /brand/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a brand                                                |
-| DELETE | /brand/:id  |                 | Token, isAdmin | 204      | Delete a brand                                                |
+| Method | Link        | Request         | Middleware    | Response | Description                                                   |
+|--------|-------------|-----------------|---------------|----------|---------------------------------------------------------------|
+| POST   | /brand      | Form-data, JSON | Auth, isAdmin | 201      | Create a new brand                                            |
+| POST   | /brand/file | Form-data       | Auth, isAdmin | 201      | Create brands with CSV file (at crawl_data/product/brand.csv) |
+| GET    | /brand      |                 | Auth          | 200      | Get brands                                                    |
+| GET    | /brand/:id  |                 | Auth          | 200      | Get a brand                                                   |
+| PUT    | /brand/:id  | Form-data, JSON | Auth, isAdmin | 200      | Update a brand                                                |
+| DELETE | /brand/:id  |                 | Auth, isAdmin | 204      | Delete a brand                                                |
 
 **Product**
 
-| Method | Link          | Request         | Middleware     | Response | Description                                                                  |
-|--------|---------------|-----------------|----------------|----------|------------------------------------------------------------------------------|
-| POST   | /product      | Form-data, JSON | Token, isAdmin | 201      | Create a new product                                                         |
-| POST   | /product/file | Form-data       | Token, isAdmin | 201, 207 | Create some/all product with Excel file (at crawl_data/product/product.xlsx) |
-| GET    | /product      |                 | Token          | 200      | Get products                                                                 |
-| GET    | /product/:id  |                 | Token          | 200      | Get a product                                                                |
-| PUT    | /product/:id  | Form-data, JSON | Token, isAdmin | 200      | Update a product                                                             |
-| DELETE | /product/:id  |                 | Token, isAdmin | 204      | Delete a product                                                             |
+| Method | Link          | Request         | Middleware    | Response | Description                                                                  |
+|--------|---------------|-----------------|---------------|----------|------------------------------------------------------------------------------|
+| POST   | /product      | Form-data, JSON | Auth, isAdmin | 201      | Create a new product                                                         |
+| POST   | /product/file | Form-data       | Auth, isAdmin | 201, 207 | Create some/all product with Excel file (at crawl_data/product/product.xlsx) |
+| GET    | /product      |                 | Auth          | 200      | Get products                                                                 |
+| GET    | /product/:id  |                 | Auth          | 200      | Get a product                                                                |
+| PUT    | /product/:id  | Form-data, JSON | Auth, isAdmin | 200      | Update a product                                                             |
+| DELETE | /product/:id  |                 | Auth, isAdmin | 204      | Delete a product                                                             |
+
+**Order**
+
+| Method | Link       | Request         | Middleware    | Response | Description        |
+|--------|------------|-----------------|---------------|----------|--------------------|
+| POST   | /order     | Form-data, JSON | Auth          | 201      | Create a new order |
+| GET    | /order     |                 | Auth, isAdmin | 200      | Get orders         |
+| GET    | /order/:id |                 | Auth          | 200      | Get a order        |
+| PUT    | /order/:id | Form-data, JSON | Auth, isAdmin | 200      | Update a order     |
+| DELETE | /order/:id |                 | Auth          | 204      | Delete a order     |
