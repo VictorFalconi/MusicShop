@@ -34,7 +34,8 @@ func Register(ctx *gin.Context) {
 	}
 	// Hash password
 	if err := user.HashPassword(); err != nil {
-		helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), "Cant Hash Password", nil)
+		fError := helpers.FieldError{Field: "password", Message: "Cant Hash Password"}
+		helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), fError, nil)
 		return
 	}
 	// Create new User (Check validate Database)
