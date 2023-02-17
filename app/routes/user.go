@@ -7,7 +7,6 @@ import (
 )
 
 func UserRouter(router *gin.Engine) {
-	router.Use(middleware.CorsMiddleware())
 
 	router.POST("/user/register", controller.Register)
 	router.POST("/user/login", controller.Login)

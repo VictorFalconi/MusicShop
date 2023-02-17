@@ -7,7 +7,6 @@ import (
 )
 
 func ProductRouter(router *gin.Engine) {
-	router.Use(middleware.CorsMiddleware())
 	router.Use(middleware.AuthMiddleware())
 
 	router.POST("/product", middleware.AdminMiddleware(), controller.CreateProduct)

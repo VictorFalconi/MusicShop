@@ -7,7 +7,6 @@ import (
 )
 
 func BrandRouter(router *gin.Engine) {
-	router.Use(middleware.CorsMiddleware())
 	router.Use(middleware.AuthMiddleware())
 
 	router.POST("/brand", middleware.AdminMiddleware(), controller.CreateBrand)

@@ -7,7 +7,6 @@ import (
 )
 
 func OrderRouter(router *gin.Engine) {
-	router.Use(middleware.CorsMiddleware())
 	router.Use(middleware.AuthMiddleware())
 
 	// User
