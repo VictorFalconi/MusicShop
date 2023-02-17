@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
-	"gorm.io/gorm"
 	"os"
 	"server/app/models"
 	"server/config"
@@ -16,11 +15,10 @@ import (
 // CORS
 func CorsMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
-
+		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		if ctx.Request.Method == "OPTIONS" {
 			ctx.AbortWithStatus(204)
 			return
@@ -79,12 +77,14 @@ func AuthMiddleware() gin.HandlerFunc {
 					return
 				}
 			} else {
-				helpers.RespondJSON(ctx, 401, helpers.StatusCodeFromInt(401), err.Error(), nil)
+				fError := helpers.FieldError{Field: "token", Message: err.Error()}
+				helpers.RespondJSON(ctx, 401, helpers.StatusCodeFromInt(401), fError, nil)
 				ctx.Abort()
 				return
 			}
 		} else {
-			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), "No token found", nil)
+			fError := helpers.FieldError{Field: "token", Message: "No token found"}
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), fError, nil)
 			ctx.Abort()
 			return
 		}
@@ -100,26 +100,27 @@ func AdminMiddleware() gin.HandlerFunc {
 		if errName == nil && RoleName == "admin" {
 			ctx.Next()
 		} else {
-			helpers.RespondJSON(ctx, 403, helpers.StatusCodeFromInt(403), "Account is not authorized, You are not admin", nil)
+			fError := helpers.FieldError{Field: "role", Message: "Account is not authorized, You are not admin"}
+			helpers.RespondJSON(ctx, 403, helpers.StatusCodeFromInt(403), fError, nil)
 			ctx.Abort()
 			return
 		}
 	}
 }
 
-// Login using username & password
-func BasicAuth(currUser models.LoginUser, user models.User, db *gorm.DB, ctx *gin.Context) (string, string, error) {
-	if err := db.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-		message := "Incorrect Filed"
-		error := "Name isn't already exist"
-		return message, error, err
-	} else {
-		// Compare password
-		if user.ComparePassword(currUser.Password) == false {
-			message := "Incorrect Filed"
-			error := "Incorrect Password"
-			return message, error, err
-		}
-	}
-	return "", "", nil
-}
+//// Login using username & password
+//func BasicAuth(currUser models.LoginUser, user models.User, db *gorm.DB, ctx *gin.Context) (string, string, error) {
+//	if err := db.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
+//		message := "Incorrect Filed"
+//		error := "Name isn't already exist"
+//		return message, error, err
+//	} else {
+//		// Compare password
+//		if user.ComparePassword(currUser.Password) == false {
+//			message := "Incorrect Filed"
+//			error := "Incorrect Password"
+//			return message, error, err
+//		}
+//	}
+//	return "", "", nil
+//}

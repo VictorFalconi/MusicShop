@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update user: custom">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update CORS: Enable CORS for AJAX request">
       <change afterPath="$PROJECT_DIR$/helpers/util.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -13,8 +13,6 @@
       <change beforePath="$PROJECT_DIR$/app/models/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/product.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/Reponse.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/Reponse.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
@@ -115,7 +113,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update Model: Role" />
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Update product: model, route, controller" />
     <MESSAGE value="Update product: CRUD brand" />
@@ -140,7 +137,8 @@
     <MESSAGE value="Update order: Commit order entity" />
     <MESSAGE value="Update user: router" />
     <MESSAGE value="Update user: custom" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update user: custom" />
+    <MESSAGE value="Update CORS: Enable CORS for AJAX request" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update CORS: Enable CORS for AJAX request" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

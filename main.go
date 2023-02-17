@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/app/routes"
 	"server/config"
+	"server/middleware"
 )
 
 func init() {
@@ -16,6 +17,10 @@ func main() {
 	//router := gin.New()
 	router := gin.Default()
 
+	// Allow CORS with credentials
+	router.Use(middleware.CorsMiddleware())
+
+	// Routes
 	routes.UserRouter(router)
 	routes.BrandRouter(router)
 	routes.ProductRouter(router)
