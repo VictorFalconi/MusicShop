@@ -15,7 +15,6 @@
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/Reponse.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/Reponse.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/user_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

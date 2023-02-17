@@ -3,6 +3,7 @@ package models
 import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"server/helpers"
 	"time"
 )
 
@@ -33,6 +34,11 @@ type User struct {
 
 }
 
+type LoginUser struct {
+	Name     string `json:"name"     form:"name"     validate:"required,min=4,max=32"`
+	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
+}
+
 type ReadUser struct {
 	Name        string
 	Email       string
@@ -50,11 +56,6 @@ func (currUser *User) UpdateStruct(newUser *User) {
 	currUser.PhoneNumber = newUser.PhoneNumber
 	currUser.Password = newUser.Password
 	currUser.Address = newUser.Address
-}
-
-type LoginUser struct {
-	Name     string `json:"name"     form:"name"     validate:"required,min=4,max=32"`
-	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
 }
 
 // Get Name_Role of User
@@ -92,4 +93,54 @@ func (currUser *User) ComparePassword(password string) bool {
 		return false
 	}
 	return true
+}
+
+// CRUD in gorm
+func (newUser *User) Register(db *gorm.DB, roleName string) (int, interface{}) {
+	// Set role for user
+	if err := newUser.SetUserRole(db, roleName); err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	}
+	// Hash password
+	if err := newUser.HashPassword(); err != nil {
+		fError := helpers.FieldError{Field: "password", Message: "Cant hash password"}
+		return 500, fError
+	}
+	// Create new User (Check validate Database)
+	if err := db.Create(&newUser).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err) // Hiện 3 lỗi khi nhập trùng cả 3 fields
+		return statusCode, ErrorDB
+	}
+	return 201, nil
+}
+
+func (uLogin *LoginUser) Login(db *gorm.DB) (int, interface{}, *uint) { //StatusCode, Message, user.id
+	// Check Field "name" in db
+	var user User
+	if err := db.Where("name = ?", uLogin.Name).First(&user).Error; err != nil {
+		fError := helpers.FieldError{Field: "name", Message: "Name isn't already exist"}
+		return 400, fError, nil
+	} else {
+		// Compare password
+		if user.ComparePassword(uLogin.Password) == false {
+			fError := helpers.FieldError{Field: "password", Message: "Incorrect Password"}
+			return 400, fError, nil
+		}
+		return 201, nil, &user.Id
+	}
+}
+
+func (currUser *User) Update(db *gorm.DB, newUser *User) (int, interface{}) {
+	currUser.UpdateStruct(newUser)
+	if err := currUser.HashPassword(); err != nil {
+		fError := helpers.FieldError{Field: "password", Message: "Cant hash password"}
+		return 500, fError
+	}
+	if err := db.Save(&currUser).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	} else {
+		return 200, nil
+	}
 }

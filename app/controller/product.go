@@ -172,7 +172,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 			continue
 		}
 
-		brands, fieldErrorBrands := helpers.String2Brands(row[9])
+		brands, fieldErrorBrands := models.String2Brands(config.DB, row[9])
 		product := models.Product{
 			Name:        row[0],
 			Quantity:    helpers.String2Int(row[1]),
@@ -195,7 +195,7 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		} else {
 			// Create Galleries for Product
 			var galleries []models.Gallery
-			galleries = helpers.String2Galleries(row[8], product.Id)
+			galleries = models.String2Galleries(row[8], product.Id)
 			if len(galleries) != 0 {
 				if errGaleery := config.DB.Create(&galleries).Error; errGaleery != nil {
 					_, ErrorDB := helpers.DBError(errGaleery)

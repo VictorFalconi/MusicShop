@@ -2,6 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
+	"server/helpers"
 	"time"
 )
 
@@ -45,4 +46,41 @@ type Gallery struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	ProductId uint
+}
+
+func String2Galleries(str string, product_id uint) []Gallery {
+	slice := helpers.String2Slice(str)
+	var galleries []Gallery
+	if len(slice) == 0 {
+		return galleries
+	}
+
+	for _, name := range slice {
+		if name == "NULL" || name == "" || name == " " {
+			continue
+		}
+		gallery := Gallery{
+			Thumbnail: name,
+			ProductId: product_id}
+		galleries = append(galleries, gallery)
+	}
+	return galleries
+}
+
+func String2Brands(db *gorm.DB, str string) ([]Brand, []helpers.FieldError) {
+	slice := helpers.String2Slice(str)
+	var brands []Brand
+	var fielderrors []helpers.FieldError
+	for _, name := range slice {
+		if name == "NULL" || name == "" || name == " " {
+			continue
+		}
+		var brand Brand
+		if err := db.Where("name = ?", name).First(&brand).Error; err == nil {
+			brands = append(brands, brand)
+		} else {
+			fielderrors = append(fielderrors, helpers.FieldError{Field: "Brand", Message: "Dont add '" + name + "' into Brand field !"})
+		}
+	}
+	return brands, fielderrors
 }
