@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update MVC: Write CRUD in model">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update unit test">
+      <change afterPath="$PROJECT_DIR$/test/user_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controller/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/user_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,8 +83,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Liem\Desktop\MusicShop\server\test" />
       <recent name="C:\Users\Liem\Desktop\MusicShop\server\app\controller" />
+      <recent name="C:\Users\Liem\Desktop\MusicShop\server\test" />
       <recent name="C:\Users\Liem\Desktop\MusicShop\server\db" />
       <recent name="C:\Users\Liem\Desktop\MusicShop\server\app_2\user" />
       <recent name="C:\Users\Liem\Desktop\MusicShop\server" />
@@ -126,8 +125,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update product: model, route, controller" />
-    <MESSAGE value="Update product: CRUD brand" />
     <MESSAGE value="Images" />
     <MESSAGE value="Update middleware: Authentication &amp; Authorization" />
     <MESSAGE value="Update API: Create Brands from file" />
@@ -151,7 +148,9 @@
     <MESSAGE value="Update user: custom" />
     <MESSAGE value="Update CORS: Enable CORS for AJAX request" />
     <MESSAGE value="Update MVC: Write CRUD in model" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update MVC: Write CRUD in model" />
+    <MESSAGE value="Update database" />
+    <MESSAGE value="Update unit test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update unit test" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
