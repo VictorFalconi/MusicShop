@@ -16,7 +16,7 @@ func OrderRouter(router *gin.Engine) {
 	router.PUT("/order/:id", controller.User_CancelOrder)
 
 	// Admin
-	router.GET("/admin_orders", middleware.AdminMiddleware(), controller.Admin_ReadOrders)
+	router.GET("/admin_order", middleware.AdminMiddleware(), controller.Admin_ReadOrders)
 	router.GET("/admin_order/:id", middleware.AdminMiddleware(), controller.Admin_ReadOrder)
 	router.PUT("/accept_order/:id", middleware.AdminMiddleware(), controller.Admin_AcceptOrder) //Notification
 	router.PUT("/cancel_order/:id", middleware.AdminMiddleware(), controller.Admin_CancelOrder) //Notification
