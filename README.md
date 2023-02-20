@@ -45,8 +45,8 @@ docker compose up
 |--------|-------------|-----------------|---------------|----------|---------------------------------------------------------------|
 | POST   | /brand      | Form-data, JSON | Auth, isAdmin | 201      | Create a new brand                                            |
 | POST   | /brand/file | Form-data       | Auth, isAdmin | 201      | Create brands with CSV file (at crawl_data/product/brand.csv) |
-| GET    | /brand      |                 | Auth          | 200      | Get brands                                                    |
-| GET    | /brand/:id  |                 | Auth          | 200      | Get a brand                                                   |
+| GET    | /brand      |                 |               | 200      | Get brands                                                    |
+| GET    | /brand/:id  |                 |               | 200      | Get a brand                                                   |
 | PUT    | /brand/:id  | Form-data, JSON | Auth, isAdmin | 200      | Update a brand                                                |
 | DELETE | /brand/:id  |                 | Auth, isAdmin | 204      | Delete a brand                                                |
 
@@ -56,8 +56,8 @@ docker compose up
 |--------|---------------|-----------------|---------------|----------|------------------------------------------------------------------------------|
 | POST   | /product      | Form-data, JSON | Auth, isAdmin | 201      | Create a new product                                                         |
 | POST   | /product/file | Form-data       | Auth, isAdmin | 201, 207 | Create some/all product with Excel file (at crawl_data/product/product.xlsx) |
-| GET    | /product      |                 | Auth          | 200      | Get products                                                                 |
-| GET    | /product/:id  |                 | Auth          | 200      | Get a product                                                                |
+| GET    | /product      |                 |               | 200      | Get products                                                                 |
+| GET    | /product/:id  |                 |               | 200      | Get a product                                                                |
 | PUT    | /product/:id  | Form-data, JSON | Auth, isAdmin | 200      | Update a product                                                             |
 | DELETE | /product/:id  |                 | Auth, isAdmin | 204      | Delete a product                                                             |
 
@@ -72,5 +72,6 @@ docker compose up
 | PUT       | /order/:id        |                 | Auth          | 200      | Cancel a order of user                         |
 | **Admin** |
 | GET       | /orders           |                 | Auth, isAdmin | 200      | Get orders of users                            |
+| GET       | /order/:id        |                 | Auth, isAdmin | 200      | Get orders of user                             |
 | PUT       | /accept_order/:id |                 | Auth, isAdmin | 200      | Accept a order of user                         |
 | PUT       | /cancel_order/:id |                 | Auth, isAdmin | 200      | Cancel a order of user with all type of status |

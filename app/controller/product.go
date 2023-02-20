@@ -1,9 +1,7 @@
 package controller
 
 import (
-	"bufio"
 	"bytes"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/xuri/excelize/v2"
@@ -30,46 +28,34 @@ func CreateProduct(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
-	// Create new Product (Check validate Database)
-	if err := config.DB.Create(&product).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
-		return
-	}
+	// Create
+	statusCode, Message := product.Create(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func ReadProducts(ctx *gin.Context) {
-	var products []models.Product
-	if err := config.DB.Preload("Galleries").Preload("Brands").Find(&products).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &products)
-		return
-	}
+	var products models.Products
+	// Reads
+	statusCode, Message, output := products.Reads(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
+	return
 }
 
 func ReadProduct(ctx *gin.Context) {
 	var product models.Product
-	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&product).Error; err != nil {
-		//ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &product)
-		return
-	}
+	// Read
+	statusCode, Message, output := product.Read(config.DB, ctx.Param("id"))
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
+	return
 }
 
 func UpdateProduct(ctx *gin.Context) {
 	// Find product
 	var currProduct models.Product
-	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
-		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
+	statusCode, Message, _ := currProduct.Read(config.DB, ctx.Param("id"))
+	if statusCode != 200 {
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
 	// Get request
@@ -83,45 +69,24 @@ func UpdateProduct(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
-	// Map
-	currProduct.UpdateStruct(&newProduct)
 	// Update
-	if err := config.DB.Model(&currProduct).Association("Galleries").Replace(newProduct.Galleries); err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	}
-	if err := config.DB.Model(&currProduct).Association("Brands").Replace(newProduct.Brands); err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	}
-	if err := config.DB.Save(&currProduct).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
-		return
-	}
+	statusCode, Message = currProduct.Update(config.DB, &newProduct)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func DeleteProduct(ctx *gin.Context) {
 	// Find Product
 	var currProduct models.Product
-	if err := config.DB.Preload("Galleries").Preload("Brands").Where("id = ?", ctx.Param("id")).First(&currProduct).Error; err != nil {
-		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
+	statusCode, Message, _ := currProduct.Read(config.DB, ctx.Param("id"))
+	if statusCode != 200 {
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
-	// Delete
-	if err := config.DB.Delete(&currProduct).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 204, helpers.StatusCodeFromInt(204), nil, nil)
-		return
-	}
+	//Delete
+	statusCode, Message = currProduct.Delete(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func CreateProduct_FromFile(ctx *gin.Context) {
@@ -214,97 +179,4 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
-}
-
-//// Read many excel files
-//form, err := ctx.MultipartForm()
-//if err != nil {
-//	helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
-//	return
-//}
-//files := form.File["file"]
-//if len(files) != 2 {
-//	helpers.RespondJSON(ctx, 400, "Error type!", "Must 2 Excel file", nil)
-//	return
-//}
-//if filepath.Ext(files[0].Filename) != ".xlsx" || filepath.Ext(files[1].Filename) != ".xlsx" {
-//	helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must Excel (xlsx)", nil)
-//	return
-//}
-//var bufs []*bytes.Buffer
-//for _, file := range files {
-//	fmt.Println(file.Filename)
-//	src, err := file.Open()
-//	if err != nil {
-//		helpers.RespondJSON(ctx, 400, "Error type!", "Dont read this", nil)
-//		return
-//	}
-//	defer src.Close()
-//
-//	buf := bytes.Buffer{}
-//	io.Copy(&buf, src)
-//	bufs = append(bufs, &buf)
-//}
-
-func CreateProduct_FromFile1(ctx *gin.Context) {
-	// Read file
-	file, err := ctx.FormFile("file")
-	if err != nil {
-		helpers.RespondJSON(ctx, 400, "Error file type!", err.Error(), nil)
-		return
-	}
-	log.Println(file.Filename)
-	log.Println(filepath.Ext(file.Filename))
-	if filepath.Ext(file.Filename) != ".csv" {
-		helpers.RespondJSON(ctx, 400, "Error type!", "Type file is must CSV", nil)
-		return
-	}
-	// Read the contents of the file into a variable
-	csvFile, err := file.Open()
-	if err != nil {
-		helpers.RespondJSON(ctx, 400, "Error file!", err.Error(), nil)
-		return
-	}
-	defer csvFile.Close()
-
-	// Create a new buffered reader for the file
-	reader := bufio.NewReader(csvFile)
-
-	// Read all lines in the file
-	for {
-		line, err := reader.ReadString('\n') // '\r\n'
-		if err != nil {
-			break
-		}
-		fmt.Println(line)
-	}
-
-	//// read csv
-	//reader := csv.NewReader(csvFile)
-	//reader.Comma = ','
-	//reader.LazyQuotes = true
-	//
-	//// Struct file csv products
-	//var products []models.Product
-	//for {
-	//	record, err := reader.Read()
-	//	if err == io.EOF {
-	//		break
-	//	} else if err != nil {
-	//		helpers.RespondJSON(ctx, 400, "Error data!", err.Error(), nil)
-	//		return
-	//	}
-	//	fmt.Println(record, len(record))
-	//	product := models.Product{Name: record[0]} //????  ---- ????
-	//	products = append(products, product)
-	//}
-	//// Create new Products
-	//if err := config.DB.Create(&products).Error; err != nil {
-	//	ErrorDB := helpers.DBError(err)
-	//	helpers.RespondJSON(ctx, 400, "Error Database", ErrorDB, nil)
-	//	return
-	//} else {
-	//	helpers.RespondJSON(ctx, 201, "Created brand successful!", nil, nil)
-	//	return
-	//}
 }

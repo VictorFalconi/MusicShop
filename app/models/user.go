@@ -50,66 +50,59 @@ func (u *User) ReadUser() interface{} {
 	return ReadUser{Name: u.Name, Email: u.Email, PhoneNumber: u.PhoneNumber, Address: u.Address}
 }
 
-func (currUser *User) UpdateStruct(newUser *User) {
-	//currUser.Name = newUser.Name
-	currUser.Email = newUser.Email
-	currUser.PhoneNumber = newUser.PhoneNumber
-	currUser.Password = newUser.Password
-	currUser.Address = newUser.Address
-}
-
-// Get Name_Role of User
-func (currUser *User) GetNameRoleUser(db *gorm.DB) (error, string) {
+// GetNameRoleUser : Get Name_Role of User
+func (u *User) GetNameRoleUser(db *gorm.DB) (error, string) {
 	var role Role
-	if err := db.Where("id = ?", currUser.RoleId).First(&role).Error; err != nil {
+	if err := db.Where("id = ?", u.RoleId).First(&role).Error; err != nil {
 		return err, ""
 	}
 	return nil, role.Name
 }
 
-// Set Role of User form Name_Role:
-func (currUser *User) SetUserRole(db *gorm.DB, roleName string) error {
+// SetUserRole : Set Role of User form Name_Role:
+func (u *User) SetUserRole(db *gorm.DB, roleName string) error {
 	var role Role
 	if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {
 		return err
 	}
-	currUser.RoleId = role.Id
+	u.RoleId = role.Id
 	return nil
 }
 
 // HashPassword :
-func (currUser *User) HashPassword() error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(currUser.Password), bcrypt.DefaultCost)
+func (u *User) HashPassword() error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	currUser.Password = string(hashedPassword)
+	u.Password = string(hashedPassword)
 	return nil
 }
 
 // ComparePassword : Compare between password and HashPassword
-func (currUser *User) ComparePassword(password string) bool {
-	if err := bcrypt.CompareHashAndPassword([]byte(currUser.Password), []byte(password)); err != nil {
+func (u *User) ComparePassword(password string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)); err != nil {
 		return false
 	}
 	return true
 }
 
-// CRUD in gorm
-func (newUser *User) Register(db *gorm.DB, roleName string) (int, interface{}) {
+// CRUD
+
+func (u *User) Register(db *gorm.DB, roleName string) (int, interface{}) {
 	// Set role for user
-	if err := newUser.SetUserRole(db, roleName); err != nil {
+	if err := u.SetUserRole(db, roleName); err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
 		return statusCode, ErrorDB
 	}
 	// Hash password
-	if err := newUser.HashPassword(); err != nil {
+	if err := u.HashPassword(); err != nil {
 		fError := helpers.FieldError{Field: "password", Message: "Cant hash password"}
 		return 500, fError
 	}
 	// Create new User (Check validate Database)
-	if err := db.Create(&newUser).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err) // Hiện 3 lỗi khi nhập trùng cả 3 fields
+	if err := db.Create(&u).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
 		return statusCode, ErrorDB
 	}
 	return 201, nil
@@ -131,13 +124,21 @@ func (uLogin *LoginUser) Login(db *gorm.DB) (int, interface{}, *uint) { //Status
 	}
 }
 
-func (currUser *User) Update(db *gorm.DB, newUser *User) (int, interface{}) {
-	currUser.UpdateStruct(newUser)
-	if err := currUser.HashPassword(); err != nil {
+func (u *User) UpdateStruct(newUser *User) {
+	//currUser.Name = newUser.Name
+	u.Email = newUser.Email
+	u.PhoneNumber = newUser.PhoneNumber
+	u.Password = newUser.Password
+	u.Address = newUser.Address
+}
+
+func (u *User) Update(db *gorm.DB, newUser *User) (int, interface{}) {
+	u.UpdateStruct(newUser)
+	if err := u.HashPassword(); err != nil {
 		fError := helpers.FieldError{Field: "password", Message: "Cant hash password"}
 		return 500, fError
 	}
-	if err := db.Save(&currUser).Error; err != nil {
+	if err := db.Save(&u).Error; err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
 		return statusCode, ErrorDB
 	} else {

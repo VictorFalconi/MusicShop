@@ -27,16 +27,7 @@ type Product struct {
 	Brands    []Brand   `json:"brands"          gorm:"many2many:product_brands"`           //Product n-n Brand
 }
 
-func (currProduct *Product) UpdateStruct(newProduct *Product) {
-	currProduct.Name = newProduct.Name
-	currProduct.Quantity = newProduct.Quantity
-	currProduct.Price = newProduct.Price
-	currProduct.Discount = newProduct.Discount
-	currProduct.Thumbnail = newProduct.Thumbnail
-	currProduct.Description = newProduct.Description
-	currProduct.Year = newProduct.Year
-	currProduct.Quality = newProduct.Quality
-}
+type Products []Product
 
 type Gallery struct {
 	Id        uint   `json:"ID"          gorm:"primary_key"`
@@ -48,7 +39,74 @@ type Gallery struct {
 	ProductId uint
 }
 
-func String2Galleries(str string, product_id uint) []Gallery {
+// CRUD
+
+func (product *Product) Create(db *gorm.DB) (int, interface{}) {
+	if err := db.Create(&product).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	}
+	return 201, nil
+}
+
+func (products *Products) Reads(db *gorm.DB) (int, interface{}, interface{}) {
+	if err := db.Preload("Galleries").Preload("Brands").Find(&products).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB, nil
+	}
+	return 200, nil, products
+}
+
+func (product *Product) Read(db *gorm.DB, id string) (int, interface{}, interface{}) {
+	if err := db.Preload("Galleries").Preload("Brands").Where("id = ?", id).First(&product).Error; err != nil {
+		return 404, helpers.FieldError{Field: "", Message: "URL not found"}, nil
+	}
+	return 200, nil, product
+}
+
+func (product *Product) UpdateStruct(newProduct *Product) {
+	product.Name = newProduct.Name
+	product.Quantity = newProduct.Quantity
+	product.Price = newProduct.Price
+	product.Discount = newProduct.Discount
+	product.Thumbnail = newProduct.Thumbnail
+	product.Description = newProduct.Description
+	product.Year = newProduct.Year
+	product.Quality = newProduct.Quality
+}
+
+func (product *Product) Update(db *gorm.DB, newProduct *Product) (int, interface{}) {
+	// Map
+	product.UpdateStruct(newProduct)
+	// Update
+	if err := db.Model(&product).Association("Galleries").Replace(newProduct.Galleries); err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	}
+	if err := db.Model(&product).Association("Brands").Replace(newProduct.Brands); err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	}
+	if err := db.Save(&product).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	}
+	return 200, nil
+}
+
+func (product *Product) Delete(db *gorm.DB) (int, interface{}) {
+	// Delete
+	if err := db.Delete(&product).Error; err != nil {
+		statusCode, ErrorDB := helpers.DBError(err)
+		return statusCode, ErrorDB
+	} else {
+		return 200, nil
+	}
+}
+
+// Create products from Excel file
+
+func String2Galleries(str string, productId uint) []Gallery {
 	slice := helpers.String2Slice(str)
 	var galleries []Gallery
 	if len(slice) == 0 {
@@ -61,7 +119,7 @@ func String2Galleries(str string, product_id uint) []Gallery {
 		}
 		gallery := Gallery{
 			Thumbnail: name,
-			ProductId: product_id}
+			ProductId: productId}
 		galleries = append(galleries, gallery)
 	}
 	return galleries

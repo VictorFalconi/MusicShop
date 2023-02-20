@@ -24,45 +24,36 @@ func CreateBrand(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
-	// Create new Brand (Check validate Database)
-	if err := config.DB.Create(&brand).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
-		return
-	}
+	// Create
+	statusCode, Message := brand.Create(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func ReadBrands(ctx *gin.Context) {
-	var brands []models.Brand
-	if err := config.DB.Find(&brands).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &brands)
-		return
-	}
+	var brands models.Brands
+	// Reads
+	statusCode, Message, output := brands.Reads(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
+	return
 }
 
 func ReadBrand(ctx *gin.Context) {
 	var brand models.Brand
-	if err := config.DB.Where("id = ?", ctx.Param("id")).First(&brand).Error; err != nil {
-		//ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, &brand)
-		return
-	}
+	//Read
+	statusCode, Message, output := brand.Read(config.DB, ctx.Param("id"))
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
+	return
 }
 
 func UpdateBrand(ctx *gin.Context) {
 	// Find brand
 	var currBrand models.Brand
-	config.DB.Where("id = ?", ctx.Param("id")).First((&currBrand))
+	statusCode, Message, _ := currBrand.Read(config.DB, ctx.Param("id"))
+	if statusCode != 200 {
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+		return
+	}
 	// Get request
 	var newBrand models.Brand
 	if err := helpers.DataContentType(ctx, &newBrand); err != nil {
@@ -75,33 +66,23 @@ func UpdateBrand(ctx *gin.Context) {
 		return
 	}
 	// Update
-	currBrand.Name = newBrand.Name
-	if err := config.DB.Save(&currBrand).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
-		return
-	}
+	statusCode, Message = currBrand.Update(config.DB, &newBrand)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func DeleteBrand(ctx *gin.Context) {
 	// Find Brand
 	var currBrand models.Brand
-	if err := config.DB.Where("id = ?", ctx.Param("id")).First(&currBrand).Error; err != nil {
-		helpers.RespondJSON(ctx, 404, helpers.StatusCodeFromInt(404), "URL not found", nil)
+	statusCode, Message, _ := currBrand.Read(config.DB, ctx.Param("id"))
+	if statusCode != 200 {
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
-	// Delete
-	if err := config.DB.Delete(&currBrand).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 204, helpers.StatusCodeFromInt(204), nil, nil)
-		return
-	}
+	//Delete
+	statusCode, Message = currBrand.Delete(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }
 
 func CreateBrand_FromFile(ctx *gin.Context) {
@@ -127,7 +108,7 @@ func CreateBrand_FromFile(ctx *gin.Context) {
 
 	// read csv
 	reader := csv.NewReader(csvFile)
-	var brands []models.Brand
+	var brands models.Brands
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
@@ -139,13 +120,8 @@ func CreateBrand_FromFile(ctx *gin.Context) {
 		brand := models.Brand{Name: record[0]}
 		brands = append(brands, brand)
 	}
-	// Create new Brands
-	if err := config.DB.Create(&brands).Error; err != nil {
-		statusCode, ErrorDB := helpers.DBError(err)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), ErrorDB, nil)
-		return
-	} else {
-		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
-		return
-	}
+	// Creates
+	statusCode, Message := brands.Creates(config.DB)
+	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+	return
 }

@@ -24,7 +24,7 @@ func Register(ctx *gin.Context) {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 		return
 	}
-	// Create
+	// Create                  //// config.DB: Hiện 3 lỗi khi nhập trùng cả 3 fields
 	statusCode, Message := user.Register(config.DB, "user")
 	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 	return
