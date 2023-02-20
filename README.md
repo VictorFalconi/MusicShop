@@ -67,11 +67,11 @@ docker compose up
 |-----------|-------------------|-----------------|---------------|----------|------------------------------------------------|
 | **User**  |
 | POST      | /order            | Form-data, JSON | Auth          | 201      | Create a new order                             |
-| GET       | /order/:id        |                 | Auth          | 200      | Get a order of user                            |
 | GET       | /order            |                 | Auth          | 200      | Get orders of user                             |
+| GET       | /order/:id        |                 | Auth          | 200      | Get a order of user                            |
 | PUT       | /order/:id        |                 | Auth          | 200      | Cancel a order of user                         |
 | **Admin** |
-| GET       | /orders           |                 | Auth, isAdmin | 200      | Get orders of users                            |
-| GET       | /order/:id        |                 | Auth, isAdmin | 200      | Get orders of user                             |
+| GET       | /admin_orders     |                 | Auth, isAdmin | 200      | Get orders of users                            |
+| GET       | /admin_order/:id  |                 | Auth, isAdmin | 200      | Get orders of user                             |
 | PUT       | /accept_order/:id |                 | Auth, isAdmin | 200      | Accept a order of user                         |
 | PUT       | /cancel_order/:id |                 | Auth, isAdmin | 200      | Cancel a order of user with all type of status |

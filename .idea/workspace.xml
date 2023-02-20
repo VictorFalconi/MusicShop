@@ -8,17 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/brand.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/product.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/user_test.go" afterDir="false" />
     </list>
