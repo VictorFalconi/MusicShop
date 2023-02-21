@@ -59,9 +59,11 @@ func (u *User) GetNameRoleUser(db *gorm.DB) (error, string) {
 	return nil, role.Name
 }
 
-// SetUserRole : Set Role of User form Name_Role:
-func (u *User) SetUserRole(db *gorm.DB, roleName string) error {
+// Set Role of User is "user":
+func (u *User) SetUserRole(db *gorm.DB) error {
 	var role Role
+	// Set role name
+	roleName := "user"
 	if err := db.Where("name = ?", roleName).First(&role).Error; err != nil {
 		return err
 	}
@@ -89,9 +91,9 @@ func (u *User) ComparePassword(password string) bool {
 
 // CRUD
 
-func (u *User) Register(db *gorm.DB, roleName string) (int, interface{}) {
+func (u *User) Register(db *gorm.DB) (int, interface{}) {
 	// Set role for user
-	if err := u.SetUserRole(db, roleName); err != nil {
+	if err := u.SetUserRole(db); err != nil {
 		statusCode, ErrorDB := helpers.DBError(err)
 		return statusCode, ErrorDB
 	}

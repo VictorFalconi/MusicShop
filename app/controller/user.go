@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 	"net/http"
 	"server/app/models"
 	"server/config"
@@ -11,23 +12,25 @@ import (
 )
 
 // Register new User
-func Register(ctx *gin.Context) {
-	var user models.User
-	// Check data type
-	if err := helpers.DataContentType(ctx, &user); err != nil {
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+func RegisterHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var user models.User
+		// Check data type
+		if err := helpers.DataContentType(ctx, &user); err != nil {
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+			return
+		}
+		// Check validate field     //Thiếu 2 cái: nhập dư field k có trong user; nhập trùng 2 field giống nhau
+		if err := validator.New().Struct(&user); err != nil {
+			listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
+			return
+		}
+		// Create                  //// config.DB: Hiện 3 lỗi khi nhập trùng cả 3 fields
+		statusCode, Message := user.Register(db)
+		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
-	// Check validate field     //Thiếu 2 cái: nhập dư field k có trong user; nhập trùng 2 field giống nhau
-	if err := validator.New().Struct(&user); err != nil {
-		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
-		return
-	}
-	// Create                  //// config.DB: Hiện 3 lỗi khi nhập trùng cả 3 fields
-	statusCode, Message := user.Register(config.DB, "user")
-	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
-	return
 }
 
 // Login user
