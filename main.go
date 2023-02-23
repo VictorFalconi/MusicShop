@@ -18,7 +18,7 @@ func main() {
 	// Allow CORS middleware with credentials
 	r.Use(middleware.CorsMiddleware())
 
-	// Routes
+	// Routers
 	router.UserRouter(r)
 	router.BrandRouter(r)
 	router.ProductRouter(r)

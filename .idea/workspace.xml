@@ -4,36 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update register api test">
-      <change afterPath="$PROJECT_DIR$/app/repository/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/service/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/test/mocks/user.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/test/user_test.go" afterDir="false" />
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update version 2: Update New MVC style &amp; unit test">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/brand.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/router/brand.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/router/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/product.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/router/product.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/router/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/music_shop.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/test/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/test/user_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/validate.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/user_test.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +109,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update API: Create Brands from file" />
     <MESSAGE value="Update images: update database" />
     <MESSAGE value="Update product: CRUD product" />
     <MESSAGE value="Update README.md: CRUD product" />
@@ -158,7 +133,8 @@
     <MESSAGE value="Update unit test" />
     <MESSAGE value="Update handler func in router" />
     <MESSAGE value="Update register api test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update register api test" />
+    <MESSAGE value="Update version 2: Update New MVC style &amp; unit test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update version 2: Update New MVC style &amp; unit test" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

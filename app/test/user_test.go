@@ -21,6 +21,8 @@ import (
 	"testing"
 )
 
+//go test -v -cover ...\MusicShop\server\app\test
+
 func Test_Repo_Create(t *testing.T) {
 	mockRepo := new(mocks.MockDBUSer)
 
