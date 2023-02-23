@@ -5,7 +5,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"os"
-	"server/app/models"
+	"server/app/model"
 )
 
 var DB *gorm.DB
@@ -13,21 +13,21 @@ var DB *gorm.DB
 //Ceate admin & user role
 func Init_Role() error {
 	//admin
-	var admin_role models.Role
+	var admin_role model.Role
 	admin_role.Name = "admin"
 	if err := DB.Create(&admin_role).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
 		fmt.Println("Error Database: Dont create admin role")
 	}
 	// user
-	var user_role models.Role
+	var user_role model.Role
 	user_role.Name = "user"
 	if err := DB.Create(&user_role).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
 		fmt.Println("Error Database: Dont create user role")
 	}
 	// employee
-	var employee_role models.Role
+	var employee_role model.Role
 	employee_role.Name = "employee"
 	if err := DB.Create(&employee_role).Error; err != nil {
 		//ErrorDB := helpers.DBError(err)
@@ -44,11 +44,11 @@ func ConnectDB() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&models.Role{}, &models.User{})
-	db.AutoMigrate(&models.Brand{})
-	db.AutoMigrate(&models.Product{}, &models.Gallery{})
-	db.SetupJoinTable(&models.Order{}, "Products", &models.OrderProducts{})
-	db.AutoMigrate(&models.Order{})
+	db.AutoMigrate(&model.Role{}, &model.User{})
+	db.AutoMigrate(&model.Brand{})
+	db.AutoMigrate(&model.Product{}, &model.Gallery{})
+	db.SetupJoinTable(&model.Order{}, "Products", &model.OrderProducts{})
+	db.AutoMigrate(&model.Order{})
 
 	fmt.Println("Migration complete")
 	DB = db

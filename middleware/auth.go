@@ -5,12 +5,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"os"
-	"server/app/models"
-	"server/config"
+	"server/app/model"
+	"server/app/repository"
 	"server/helpers"
 	"strings"
 	"time"
 )
+
+type UserMiddleware struct {
+	repo repository.UserRepoInterface
+}
+
+func NewUserMiddleware(repo repository.UserRepoInterface) *UserMiddleware {
+	return &UserMiddleware{repo}
+}
 
 // CORS
 func CorsMiddleware() gin.HandlerFunc {
@@ -46,19 +54,8 @@ func ValidateToken(token string) (*jwt.Token, error) {
 	})
 }
 
-func GetUserFromToken(token *jwt.Token) (interface{}, error) {
-	claims := token.Claims.(jwt.MapClaims)
-	// Query User from id
-	var user models.User
-	if err := config.DB.Where("id = ?", claims["id"]).First(&user).Error; err != nil {
-		return nil, err
-	} else {
-		return user, nil
-	}
-}
-
 // Authenticaton: Xác thực người dùng
-func AuthMiddleware() gin.HandlerFunc {
+func (um *UserMiddleware) AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		//Get token
 		bearerToken := ctx.Request.Header.Get("Authorization")
@@ -66,7 +63,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			//Validate token
 			token, err := ValidateToken(strings.Split(bearerToken, " ")[1])
 			if token.Valid && err == nil { // thiếu nhap random token thi error
-				user, errDB := GetUserFromToken(token)
+				user, errDB := um.repo.GetUserFromToken(token)
 				if errDB == nil {
 					ctx.Set("user", user)
 					ctx.Next()
@@ -91,13 +88,14 @@ func AuthMiddleware() gin.HandlerFunc {
 	}
 }
 
-// Authorization: Ủy quyền người dùng
-func AdminMiddleware() gin.HandlerFunc {
+//Authorization: Ủy quyền người dùng
+func (um *UserMiddleware) AdminMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		user := ctx.MustGet("user").(models.User)
+		user := ctx.MustGet("user").(model.User)
 		// Find role of account is "admin"
-		errName, RoleName := user.GetNameRoleUser(config.DB)
-		if errName == nil && RoleName == "admin" {
+
+		role, err := um.repo.GetRoleOfUser(&user)
+		if err == nil && role.Name == "admin" {
 			ctx.Next()
 		} else {
 			fError := helpers.FieldError{Field: "role", Message: "Account is not authorized, You are not admin"}
@@ -107,20 +105,3 @@ func AdminMiddleware() gin.HandlerFunc {
 		}
 	}
 }
-
-//// Login using username & password
-//func BasicAuth(currUser models.LoginUser, user models.User, db *gorm.DB, ctx *gin.Context) (string, string, error) {
-//	if err := db.Where("name = ?", currUser.Name).First(&user).Error; err != nil {
-//		message := "Incorrect Filed"
-//		error := "Name isn't already exist"
-//		return message, error, err
-//	} else {
-//		// Compare password
-//		if user.ComparePassword(currUser.Password) == false {
-//			message := "Incorrect Filed"
-//			error := "Incorrect Password"
-//			return message, error, err
-//		}
-//	}
-//	return "", "", nil
-//}

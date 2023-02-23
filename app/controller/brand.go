@@ -6,13 +6,13 @@ import (
 	"github.com/go-playground/validator/v10"
 	"io"
 	"path/filepath"
-	"server/app/models"
+	"server/app/model"
 	"server/config"
 	"server/helpers"
 )
 
 func CreateBrand(ctx *gin.Context) {
-	var brand models.Brand
+	var brand model.Brand
 	// Check data type
 	if err := helpers.DataContentType(ctx, &brand); err != nil {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
@@ -31,7 +31,7 @@ func CreateBrand(ctx *gin.Context) {
 }
 
 func ReadBrands(ctx *gin.Context) {
-	var brands models.Brands
+	var brands model.Brands
 	// Reads
 	statusCode, Message, output := brands.Reads(config.DB)
 	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
@@ -39,7 +39,7 @@ func ReadBrands(ctx *gin.Context) {
 }
 
 func ReadBrand(ctx *gin.Context) {
-	var brand models.Brand
+	var brand model.Brand
 	//Read
 	statusCode, Message, output := brand.Read(config.DB, ctx.Param("id"))
 	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
@@ -48,14 +48,14 @@ func ReadBrand(ctx *gin.Context) {
 
 func UpdateBrand(ctx *gin.Context) {
 	// Find brand
-	var currBrand models.Brand
+	var currBrand model.Brand
 	statusCode, Message, _ := currBrand.Read(config.DB, ctx.Param("id"))
 	if statusCode != 200 {
 		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
 	// Get request
-	var newBrand models.Brand
+	var newBrand model.Brand
 	if err := helpers.DataContentType(ctx, &newBrand); err != nil {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
@@ -73,7 +73,7 @@ func UpdateBrand(ctx *gin.Context) {
 
 func DeleteBrand(ctx *gin.Context) {
 	// Find Brand
-	var currBrand models.Brand
+	var currBrand model.Brand
 	statusCode, Message, _ := currBrand.Read(config.DB, ctx.Param("id"))
 	if statusCode != 200 {
 		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
@@ -108,7 +108,7 @@ func CreateBrand_FromFile(ctx *gin.Context) {
 
 	// read csv
 	reader := csv.NewReader(csvFile)
-	var brands models.Brands
+	var brands model.Brands
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
@@ -117,7 +117,7 @@ func CreateBrand_FromFile(ctx *gin.Context) {
 			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 			return
 		}
-		brand := models.Brand{Name: record[0]}
+		brand := model.Brand{Name: record[0]}
 		brands = append(brands, brand)
 	}
 	// Creates

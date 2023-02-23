@@ -9,14 +9,14 @@ import (
 	"log"
 	"path/filepath"
 	"reflect"
-	"server/app/models"
+	"server/app/model"
 	"server/config"
 	"server/helpers"
 )
 
 // CreateProduct : Create Product
 func CreateProduct(ctx *gin.Context) {
-	var product models.Product
+	var product model.Product
 	// Check data type
 	if err := helpers.DataContentType(ctx, &product); err != nil {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
@@ -35,7 +35,7 @@ func CreateProduct(ctx *gin.Context) {
 }
 
 func ReadProducts(ctx *gin.Context) {
-	var products models.Products
+	var products model.Products
 	// Reads
 	statusCode, Message, output := products.Reads(config.DB)
 	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
@@ -43,7 +43,7 @@ func ReadProducts(ctx *gin.Context) {
 }
 
 func ReadProduct(ctx *gin.Context) {
-	var product models.Product
+	var product model.Product
 	// Read
 	statusCode, Message, output := product.Read(config.DB, ctx.Param("id"))
 	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, output)
@@ -52,14 +52,14 @@ func ReadProduct(ctx *gin.Context) {
 
 func UpdateProduct(ctx *gin.Context) {
 	// Find product
-	var currProduct models.Product
+	var currProduct model.Product
 	statusCode, Message, _ := currProduct.Read(config.DB, ctx.Param("id"))
 	if statusCode != 200 {
 		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 		return
 	}
 	// Get request
-	var newProduct models.Product
+	var newProduct model.Product
 	if err := helpers.DataContentType(ctx, &newProduct); err != nil {
 		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 		return
@@ -77,7 +77,7 @@ func UpdateProduct(ctx *gin.Context) {
 
 func DeleteProduct(ctx *gin.Context) {
 	// Find Product
-	var currProduct models.Product
+	var currProduct model.Product
 	statusCode, Message, _ := currProduct.Read(config.DB, ctx.Param("id"))
 	if statusCode != 200 {
 		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
@@ -130,15 +130,15 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 			continue
 		}
 		// Len of row
-		numField := reflect.ValueOf(models.Product{}).NumField()
+		numField := reflect.ValueOf(model.Product{}).NumField()
 		log.Println(numField, len(row), row)
 		if len(row) != (numField - 4) { // ID, Amount, Discount, CUD time
 			listDataErr = append(listDataErr, helpers.LineError{Line: i + 1, Message: "Invalid length or empty field"})
 			continue
 		}
 
-		brands, fieldErrorBrands := models.String2Brands(config.DB, row[9])
-		product := models.Product{
+		brands, fieldErrorBrands := model.String2Brands(config.DB, row[9])
+		product := model.Product{
 			Name:        row[0],
 			Quantity:    helpers.String2Int(row[1]),
 			Price:       helpers.String2Float(row[2]),
@@ -159,8 +159,8 @@ func CreateProduct_FromFile(ctx *gin.Context) {
 			listDataErr = append(listDataErr, lineErr)
 		} else {
 			// Create Galleries for Product
-			var galleries []models.Gallery
-			galleries = models.String2Galleries(row[8], product.Id)
+			var galleries []model.Gallery
+			galleries = model.String2Galleries(row[8], product.Id)
 			if len(galleries) != 0 {
 				if errGaleery := config.DB.Create(&galleries).Error; errGaleery != nil {
 					_, ErrorDB := helpers.DBError(errGaleery)

@@ -3,92 +3,108 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"gorm.io/gorm"
 	"net/http"
-	"server/app/models"
-	"server/config"
+	"server/app/model"
+	"server/app/service"
 	"server/helpers"
-	"server/middleware"
 )
 
+type UserController struct {
+	service service.UserServiceInterface
+}
+
+func NewUserController(service service.UserServiceInterface) *UserController {
+	return &UserController{service}
+}
+
 // Register new User
-func RegisterHandler(db *gorm.DB) gin.HandlerFunc {
+func (c *UserController) RegisterHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var user models.User
+		var user model.User
 		// Check data type
 		if err := helpers.DataContentType(ctx, &user); err != nil {
 			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
 			return
 		}
-		// Check validate field     //Thiếu 2 cái: nhập dư field k có trong user; nhập trùng 2 field giống nhau
+		// Check validate field
 		if err := validator.New().Struct(&user); err != nil {
 			listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
 			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
 			return
 		}
-		// Create                  //// config.DB: Hiện 3 lỗi khi nhập trùng cả 3 fields
-		statusCode, Message := user.Register(db)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+		// Create
+		if err := c.service.Register(&user); err != nil {
+			statusCode, message := helpers.DBError(err)
+			helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), message, nil)
+			return
+		}
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
 }
 
-// Login user
-func Login(ctx *gin.Context) {
-	var currUser models.LoginUser
-	if err := helpers.DataContentType(ctx, &currUser); err != nil {
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
-		return
-	}
-	validate := validator.New()
-	if err := validate.Struct(&currUser); err != nil {
-		dictErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), dictErrors, nil)
-		return
-	}
-	// Login
-	statusCode, Message, UserID := currUser.Login(config.DB)
-	if statusCode != 201 {
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
-		return
-	} else {
-		//Create token
-		token, errCreate := middleware.CreateToken(*UserID)
-		if errCreate != nil {
-			fError := helpers.FieldError{Field: "token", Message: errCreate.Error()}
-			helpers.RespondJSON(ctx, 500, helpers.StatusCodeFromInt(500), fError, nil)
+//Login
+func (c *UserController) LoginHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var loginUser model.LoginUser
+		// Check data type
+		if err := helpers.DataContentType(ctx, &loginUser); err != nil {
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+			return
+		}
+		// Check validate field
+		if err := validator.New().Struct(&loginUser); err != nil {
+			listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
+			return
+		}
+		// Login
+		err, token := c.service.Login(&loginUser)
+		if err != nil {
+			statusCode, message := helpers.DBError(err)
+			helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), message, nil)
 			return
 		}
 		//Response token
 		ctx.SetSameSite(http.SameSiteLaxMode)
 		ctx.SetCookie("Authorization", token, 3600*12, "/", "", false, true)
-		helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
 }
 
-func ReadUser(ctx *gin.Context) {
-	// Get User from Token
-	user := ctx.MustGet("user").(models.User)
-	helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, user.ReadUser())
-	return
+// Read
+func (c *UserController) ReadUserHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		user := ctx.MustGet("user").(model.User)
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, user.ReadUser())
+		return
+	}
 }
 
-func UpdateUser(ctx *gin.Context) {
-	// Current User
-	currUser := ctx.MustGet("user").(models.User)
-	// Get request
-	var newUser models.User
-	if err := helpers.DataContentType(ctx, &newUser); err != nil {
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+// Update
+func (c *UserController) UpdateUserHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// Current User
+		currUser := ctx.MustGet("user").(model.User)
+		// Get request
+		var newUser model.User
+		if err := helpers.DataContentType(ctx, &newUser); err != nil {
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), err.Error(), nil)
+			return
+		}
+		if err := validator.New().Struct(&newUser); err != nil {
+			listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
+			helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
+			return
+		}
+		// Update
+		if err := c.service.Update(&currUser, &newUser); err != nil {
+			statusCode, message := helpers.DBError(err)
+			helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), message, nil)
+			return
+		}
+		helpers.RespondJSON(ctx, 200, helpers.StatusCodeFromInt(200), nil, nil)
 		return
 	}
-	if err := validator.New().Struct(&newUser); err != nil {
-		listErrors := helpers.ValidateErrors(err.(validator.ValidationErrors))
-		helpers.RespondJSON(ctx, 400, helpers.StatusCodeFromInt(400), listErrors, nil)
-		return
-	}
-	// Update
-	statusCode, Message := currUser.Update(config.DB, &newUser)
-	helpers.RespondJSON(ctx, statusCode, helpers.StatusCodeFromInt(statusCode), Message, nil)
 }

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"server/app/routes"
+	"server/app/router"
 	"server/config"
 	"server/middleware"
 )
@@ -13,19 +13,19 @@ func init() {
 }
 
 func main() {
-	router := gin.Default()
+	r := gin.Default()
 
 	// Allow CORS middleware with credentials
-	router.Use(middleware.CorsMiddleware())
+	r.Use(middleware.CorsMiddleware())
 
 	// Routes
-	routes.UserRouter(router)
-	routes.BrandRouter(router)
-	routes.ProductRouter(router)
-	routes.OrderRouter(router)
+	router.UserRouter(r)
+	router.BrandRouter(r)
+	router.ProductRouter(r)
+	router.OrderRouter(r)
 
 	// Start the server
-	if err := router.Run(); err != nil {
+	if err := r.Run(); err != nil {
 		panic(err)
 	}
 }

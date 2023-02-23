@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgconn"
+	"gorm.io/gorm"
 	"regexp"
 	"strings"
 )
@@ -58,7 +59,7 @@ type FieldError struct {
 	Message string
 }
 
-func MessageForTag(fe validator.FieldError) string {
+func messageForTag(fe validator.FieldError) string {
 	switch fe.Tag() {
 	//Validate
 	case "required":
@@ -78,13 +79,13 @@ func MessageForTag(fe validator.FieldError) string {
 func ValidateErrors(errs validator.ValidationErrors) interface{} {
 	listErrors := make([]FieldError, len(errs))
 	for index, e := range errs {
-		listErrors[index] = FieldError{Field: strings.ToLower(e.Field()), Message: MessageForTag(e)}
+		listErrors[index] = FieldError{Field: strings.ToLower(e.Field()), Message: messageForTag(e)}
 	}
 	return listErrors
 }
 
 //Validate Database: Error Handling
-func MessageForTagDB(pgErr *pgconn.PgError) (int, string) {
+func messageFormCodeDB(pgErr *pgconn.PgError) (int, string) {
 	switch pgErr.Code {
 	//Validate DB
 	case "23505":
@@ -97,28 +98,53 @@ func MessageForTagDB(pgErr *pgconn.PgError) (int, string) {
 	return 400, pgErr.Error()
 }
 
+func fieldfromError(err error) (int, FieldError) {
+	switch err.Error() {
+	// Register
+	case "dont find role name":
+		return 400, FieldError{Field: "role", Message: err.Error()}
+	case "cant hash password":
+		return 500, FieldError{Field: "password", Message: err.Error()}
+
+	// Login
+	case "name isn't already exist":
+		return 400, FieldError{Field: "name", Message: err.Error()}
+	case "incorrect password":
+		return 400, FieldError{Field: "password", Message: err.Error()}
+
+	}
+	return 0, FieldError{Field: "", Message: ""}
+}
+
 func DBError(err error) (int, []FieldError) {
 	var fieldErrors []FieldError
 	if err == nil {
 		return 400, fieldErrors
 	}
-
+	// Error have code
 	var pgErr *pgconn.PgError
-
 	if errors.As(err, &pgErr) {
-		//fmt.Printf("%#v", pgErr)
-		StatusCode, MessageDB := MessageForTagDB(pgErr)
-		//dictError := FieldError{Field: pgErr.ColumnName, Message: MessageForTagDB(pgErr)} //Return ''
-		//fieldErrors = append(fieldErrors, FieldError{Field: pgErr.ConstraintName, Message: MessageDB})
-		fieldErrors = append(fieldErrors, FieldError{Field: Detail2ColumnName(pgErr.Detail), Message: MessageDB})
+		StatusCode, MessageDB := messageFormCodeDB(pgErr)
+		fieldErrors = append(fieldErrors, FieldError{Field: detail2ColumnName(pgErr.Detail), Message: MessageDB})
 		return StatusCode, fieldErrors
-	} else {
-		fieldErrors = append(fieldErrors, FieldError{Field: "Unknown", Message: err.Error()})
-		return 400, fieldErrors
 	}
+	// gorm.ErrRecordNotFound (Query "Where" don't find)
+	statusCode, fieldError := fieldfromError(err)
+	if statusCode > 0 { //New error
+		fieldErrors = append(fieldErrors, fieldError)
+		return statusCode, fieldErrors
+	}
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		fieldErrors = append(fieldErrors, FieldError{Field: "", Message: "URL not found"})
+		return 404, fieldErrors
+	}
+	// else
+	fieldErrors = append(fieldErrors, FieldError{Field: "Unknown", Message: err.Error()})
+	return 500, fieldErrors
+
 }
 
-func Detail2ColumnName(str string) string {
+func detail2ColumnName(str string) string {
 	if str == "" {
 		return str
 	}
