@@ -66,10 +66,13 @@ paths:
       responses:
         '201':
           description: The new resource has been created
-          content:
-            application/json:
+          headers:
+            Set-Cookie:
               schema:
-                $ref: '#/components/schemas/Cookie'
+                type: string
+                format: token
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzczMjUwMzcsImlkIjoyMn0.Fa-gx4Ssx_tpjlnIaOnxNGQdCR_P4ae2XxPwWC2P4G4"
+
         '400':
           description: The request was invalid  
 
@@ -77,11 +80,11 @@ paths:
     get:
       tags:
         - user
-      security:
-        - bearerAuth: []
       operationId: GetUserHandler
       summary: Read user
       description: "Read information of user with token"
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: The new resource has been created
@@ -97,27 +100,27 @@ paths:
     put:
       tags:
         - user
-      security:
-        - bearerAuth: []
       operationId: UpdateUserHandler
       summary: Update user
       description: "Update information of user with token"
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginUser'
+              $ref: '#/components/schemas/User'
           application/xml:
             schema:
-              $ref: '#/components/schemas/LoginUser'
+              $ref: '#/components/schemas/User'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/LoginUser'
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           description: The new resource has been created
         '400':
-          description: No token found || Duplitace field
+          description: No token found || Duplicate field
         '401':
           description: The request requires authentication
  
@@ -220,19 +223,9 @@ components:
                    address: HD, KG}
       xml:
         name: responsedata
-        
-    Cookie:
-      type: object
-      properties:
-        Authorization:
-          type: string
-          format: JWT token
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzczMjUwMzcsImlkIjoyMn0.Fa-gx4Ssx_tpjlnIaOnxNGQdCR_P4ae2XxPwWC2P4G4"
-      xml:
-        name: cookie
-        
+
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
