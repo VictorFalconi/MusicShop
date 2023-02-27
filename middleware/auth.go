@@ -23,34 +23,34 @@ func NewUserMiddleware(repo repository.UserRepoInterface) *UserMiddleware {
 // CORS
 func CorsMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, x-xsrf-token, Authorization")
-		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		if ctx.Request.Method == "OPTIONS" {
-			ctx.AbortWithStatus(204)
-			return
-		}
-		ctx.Next()
-
-		//// Define a list of allowed origins
-		//allowedOrigins := []string{"http://localhost:3000", "http://localhost:8080"}
-		//// Middleware that sets the Access-Control-Allow-Origin header
-		//origin := ctx.Request.Header.Get("Origin")
-		//for _, allowedOrigin := range allowedOrigins {
-		//	if origin == allowedOrigin {
-		//		ctx.Writer.Header().Set("Access-Control-Allow-Origin", origin)
-		//		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		//		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		//		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		//		if ctx.Request.Method == "OPTIONS" {
-		//			ctx.AbortWithStatus(204)
-		//			return
-		//		}
-		//		break
-		//	}
+		//ctx.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		//ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		//ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, x-xsrf-token, Authorization")
+		//ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		//if ctx.Request.Method == "OPTIONS" {
+		//	ctx.AbortWithStatus(204)
+		//	return
 		//}
 		//ctx.Next()
+
+		// Define a list of allowed origins
+		allowedOrigins := []string{"http://localhost:3000", "http://localhost:8080"}
+		// Middleware that sets the Access-Control-Allow-Origin header
+		origin := ctx.Request.Header.Get("Origin")
+		for _, allowedOrigin := range allowedOrigins {
+			if origin == allowedOrigin {
+				ctx.Writer.Header().Set("Access-Control-Allow-Origin", origin)
+				ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+				ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, x-xsrf-token, Authorization")
+				ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+				if ctx.Request.Method == "OPTIONS" {
+					ctx.AbortWithStatus(204)
+					return
+				}
+				break
+			}
+		}
+		ctx.Next()
 	}
 }
 

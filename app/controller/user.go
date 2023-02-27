@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
 	"server/app/model"
 	"server/app/service"
 	"server/helpers"
@@ -64,12 +65,10 @@ func (c *UserController) LoginHandler() gin.HandlerFunc {
 			return
 		}
 		//Response token
-		//ctx.SetSameSite(http.SameSiteLaxMode)
-		//ctx.SetCookie("Authorization", token, 3600*12, "/", "", false, false)
-		mapToken := map[string]string{
-			"Authorization": token,
-		}
-		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, mapToken)
+		ctx.SetSameSite(http.SameSiteLaxMode)
+		ctx.SetCookie("Authorization", token, 3600*12, "/", "", false, false)
+		//mapToken := map[string]string{"Authorization": token}
+		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil) //mapToken
 		return
 	}
 }
