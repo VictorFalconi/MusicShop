@@ -17,7 +17,6 @@ func NewUserController(service service.UserServiceInterface) *UserController {
 	return &UserController{service}
 }
 
-// Register new User
 func (c *UserController) RegisterHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var user model.User

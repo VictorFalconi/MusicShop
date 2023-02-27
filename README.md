@@ -11,14 +11,25 @@ Build CRUD website with golang, postgresql and deploy on docker
 - [postgres](https://hub.docker.com/_/postgres) Database
 - [gorm](https://github.com/go-gorm/gorm) ORM
 - [pgx](https://github.com/jackc/pgx) Driver & toolkit
+- [pgconn](https://github.com/jackc/pgconn) Validate database
 
 ![Database Diagram](https://github.com/MusicShopVersion1/server/blob/master/images/Web%20Online%20MusicShop.png)
+
+## Documentation APIs
+- [Swagger UI](https://hub.docker.com/r/swaggerapi/swagger-ui)
+- [Swagger Editor](https://editor.swagger.io/)
+```
+localhost:8080
+```
 
 ## Framework & Library
 - [gin](https://github.com/gin-gonic/gin)
 - [validator](https://github.com/go-playground/validator)
 - [jwt](https://github.com/golang-jwt/jwt)
 - [excelize](https://github.com/qax-os/excelize)
+- [testify](https://github.com/stretchr/testify)
+- [gomock](https://github.com/golang/mock)
+- [go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)
 
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
 

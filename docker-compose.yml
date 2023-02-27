@@ -22,3 +22,13 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
+
+  docs:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docs:/usr/share/nginx/html/docs
+    environment:
+      - URL=/docs/openapi.yaml

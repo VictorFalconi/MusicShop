@@ -18,6 +18,10 @@ func main() {
 	// Allow CORS middleware with credentials
 	r.Use(middleware.CorsMiddleware())
 
+	// Middleware
+	//userRepo := repository.NewUserRepo(config.DB)
+	//userMiddleware := middleware.NewUserMiddleware(userRepo)
+
 	// Routers
 	router.UserRouter(r)
 	router.BrandRouter(r)
