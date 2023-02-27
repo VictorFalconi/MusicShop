@@ -31,12 +31,19 @@ localhost:8080
 - [gomock](https://github.com/golang/mock)
 - [go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)
 
+## Tools
+- [GoLand](https://www.jetbrains.com/go/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [TablePlus](https://tableplus.com/)
+- [Postman](https://www.postman.com/downloads/)
+
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
 
 ### Run project
 
 ```
 docker compose up
+localhost:6868
 ```
 
 ## APIs

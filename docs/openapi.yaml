@@ -1,0 +1,238 @@
+openapi: 3.0.3
+info:
+  title: Documentation APIs of MusicShop Website
+  description: |-
+  version: '1.0'
+servers:
+  - url: http://localhost:6868
+tags:
+  - name: user
+    description: ""
+  - name: brand
+    description: ""
+  - name: product
+    description: ""
+  - name: order
+    description: ""
+paths:
+  /user/register:
+    post:
+      tags:
+        - user
+      operationId: RegisterHandler
+      summary: Register a new user
+      description: Register with role = "user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: The new resource has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '400':
+          description: The request was invalid
+    
+  /user/login:
+    post:
+      tags:
+        - user
+      operationId: LoginHandler
+      summary: Log in
+      description: "Log in to server and response cookie"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+        required: true
+      responses:
+        '201':
+          description: The new resource has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cookie'
+        '400':
+          description: The request was invalid  
+
+  /user:
+    get:
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      operationId: GetUserHandler
+      summary: Read user
+      description: "Read information of user with token"
+      responses:
+        '200':
+          description: The new resource has been created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseData'
+        '400':
+          description: No token found
+        '401':
+          description: The request requires authentication
+    
+    put:
+      tags:
+        - user
+      security:
+        - bearerAuth: []
+      operationId: UpdateUserHandler
+      summary: Update user
+      description: "Update information of user with token"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: The new resource has been created
+        '400':
+          description: No token found || Duplitace field
+        '401':
+          description: The request requires authentication
+ 
+ 
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          format: str
+          minLength: 4
+          maxLength: 32
+          example: "liem"
+          description: unique
+        email:
+          type: string
+          format: email
+          minLength: 4
+          maxLength: 32
+          example: "liem@gmail.com"
+          description: unique
+        phonenumber:
+          type: string
+          format: str
+          example: "0123321111"
+          description: unique
+        password:
+          type: string
+          minLength: 4
+          maxLength: 32
+          format: password
+          example: "1111"
+        address                                :
+          type: string
+          format: str
+          example: "HD, KG"
+      required:
+        - name
+        - email
+        - phonenumber
+        - password
+        
+      xml:
+        name: user
+    
+    LoginUser:
+      type: object
+      properties:
+        name:
+          type: string
+          format: str
+          minLength: 4
+          maxLength: 32
+          example: "liem"
+        password:
+          type: string
+          minLength: 4
+          maxLength: 32
+          format: password
+          example: "1111"
+      required:
+        - name
+        - password
+        
+      xml:
+        name: loginuser
+    
+    
+    ResponseData:
+      type: object
+      properties:
+        Status:
+          type: integer
+          format: int
+          example: 201
+        Message:
+          type: string
+          format: str
+          example: "The new resource has been created"
+        Errors:
+          type: object
+          properties:
+            Field:
+              type: string
+              format: str
+              example: "name"
+            Message:
+              type: string
+              format: str
+              example: "This field is duplicate"
+          example: {Field: 'name',
+                   Message: 'This field is duplicate'}
+        Data:
+          type: object
+          example: {name: liem,
+                   email: liem@gmail.com,
+                   phonenumber: '0123321111',
+                   address: HD, KG}
+      xml:
+        name: responsedata
+        
+    Cookie:
+      type: object
+      properties:
+        Authorization:
+          type: string
+          format: JWT token
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzczMjUwMzcsImlkIjoyMn0.Fa-gx4Ssx_tpjlnIaOnxNGQdCR_P4ae2XxPwWC2P4G4"
+      xml:
+        name: cookie
+        
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
