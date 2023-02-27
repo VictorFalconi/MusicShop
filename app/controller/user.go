@@ -66,7 +66,7 @@ func (c *UserController) LoginHandler() gin.HandlerFunc {
 		}
 		//Response token
 		ctx.SetSameSite(http.SameSiteLaxMode)
-		ctx.SetCookie("Authorization", token, 3600*12, "/", "", false, true)
+		ctx.SetCookie("Authorization", token, 3600*12, "/", "", false, false)
 		helpers.RespondJSON(ctx, 201, helpers.StatusCodeFromInt(201), nil, nil)
 		return
 	}
