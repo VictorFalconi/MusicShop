@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update version 2: Custom for Axios frontend">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update version 2: token">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +143,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update README.md: CRUD product" />
     <MESSAGE value="Update Docker: docker compose up" />
     <MESSAGE value="Update Product: Write API create products with Excel file" />
     <MESSAGE value="Update Middleware: Import CORS" />
@@ -170,7 +167,8 @@
     <MESSAGE value="Update version 2: Update New MVC style &amp; unit test" />
     <MESSAGE value="Update version 2: Update README.md &amp; Docs APIs" />
     <MESSAGE value="Update version 2: Custom for Axios frontend" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update version 2: Custom for Axios frontend" />
+    <MESSAGE value="Update version 2: token" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update version 2: token" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
