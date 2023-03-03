@@ -41,9 +41,9 @@ func (s *UserService) Register(user *model.User) error {
 
 func (s *UserService) Login(loginUser *model.LoginUser) (error, string) {
 	// Find
-	user, err := s.repo.FindUserByName(loginUser.Name)
+	user, err := s.repo.FindUser(loginUser.Input)
 	if err != nil {
-		return errors.New("name isn't already exist"), ""
+		return errors.New("name or email isn't already exist"), ""
 	}
 	// Compare password
 	if user.ComparePassword(loginUser.Password) == false {

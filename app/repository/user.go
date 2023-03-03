@@ -13,7 +13,7 @@ type UserRepo struct {
 type UserRepoInterface interface {
 	FindRoleByName(roleName string) (*model.Role, error)
 	Create(user *model.User) error
-	FindUserByName(name string) (*model.User, error)
+	FindUser(input string) (*model.User, error)
 	Update(user *model.User) error
 
 	// Middleware
@@ -38,9 +38,9 @@ func (ur *UserRepo) Create(user *model.User) error {
 	return ur.db.Create(user).Error
 }
 
-func (ur *UserRepo) FindUserByName(name string) (*model.User, error) {
+func (ur *UserRepo) FindUser(input string) (*model.User, error) {
 	var user *model.User
-	if err := ur.db.Where("name = ?", name).First(&user).Error; err != nil {
+	if err := ur.db.Where("name = ? OR email = ?", input, input).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil

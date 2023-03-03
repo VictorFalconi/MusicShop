@@ -31,8 +31,8 @@ type User struct {
 }
 
 type LoginUser struct {
-	Name     string `json:"name"     form:"name"     validate:"required,min=4,max=32"`
-	Password string `json:"password" form:"password" validate:"required,min=4,max=32"`
+	Input    string `json:"input"     form:"input"     validate:"required,min=4,max=32"`
+	Password string `json:"password"  form:"password"  validate:"required,min=4,max=32"`
 }
 
 type ReadUser struct {

@@ -107,8 +107,8 @@ func fieldfromError(err error) (int, FieldError) {
 		return 500, FieldError{Field: "password", Message: err.Error()}
 
 	// Login
-	case "name isn't already exist":
-		return 400, FieldError{Field: "name", Message: err.Error()}
+	case "name or email isn't already exist":
+		return 400, FieldError{Field: "input", Message: err.Error()}
 	case "incorrect password":
 		return 400, FieldError{Field: "password", Message: err.Error()}
 
