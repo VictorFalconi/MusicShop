@@ -1,8 +1,10 @@
 package helpers
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func String2Float(str string) float32 {
@@ -28,4 +30,17 @@ func String2Slice(str string) []string {
 		slice[i] = strings.TrimSpace(name)
 	}
 	return slice
+}
+
+func RandomString(length int) string {
+	rand.Seed(time.Now().UnixNano())
+
+	const charset = "abcdefghijklmnopqrstuvwxyz" +
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	var result string
+	for i := 0; i < length; i++ {
+		result += string(charset[rand.Intn(len(charset))])
+	}
+	return result
 }

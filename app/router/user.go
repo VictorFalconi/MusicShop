@@ -17,7 +17,12 @@ func UserRouter(router *gin.Engine) {
 
 	router.POST("/user/register", userController.RegisterHandler())
 	router.POST("/user/login", userController.LoginHandler())
+	// OAuth
+	router.GET("/auth", userController.OAuth2Home())
+	router.GET("/auth/login", userController.OAuth2LoginHandler())
+	router.GET("/auth/callback", userController.OAuth2CallbackHandler())
 
 	router.GET("/user", userMiddleware.AuthMiddleware(), userController.ReadUserHandler())
 	router.PUT("/user", userMiddleware.AuthMiddleware(), userController.UpdateUserHandler())
+
 }

@@ -2,8 +2,10 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"server/app/model"
 	"server/app/repository"
+	"server/helpers"
 	"server/middleware"
 )
 
@@ -15,6 +17,9 @@ type UserServiceInterface interface {
 	Register(user *model.User) error
 	Login(loginUser *model.LoginUser) (error, string)
 	Update(currUser *model.User, newUser *model.User) error
+
+	//OAuth
+	GoogleLogin(userInfo map[string]interface{}) (error, string)
 }
 
 func NewUserService(repo repository.UserRepoInterface) *UserService {
@@ -66,4 +71,37 @@ func (s *UserService) Update(currUser *model.User, newUser *model.User) error {
 	}
 	//Save
 	return s.repo.Update(currUser)
+}
+
+func (s *UserService) GoogleLogin(userInfo map[string]interface{}) (error, string) {
+	email := userInfo["email"].(string)
+	name := userInfo["name"].(string)
+	verified := userInfo["verified_email"].(bool)
+	// Verify
+	if verified != true {
+		return errors.New("unverified email"), ""
+	}
+	// gmail ( chua dk -> random password -> register -> login , da dk = gmail -> login bth)    |gmail trung voi gmail co san trong db -> ???|
+
+	// Find email in db
+	user, err := s.repo.FindUser(email)
+	if err != nil {
+		// Register ( Phone is null)
+		password := helpers.RandomString(10)
+		fmt.Println(password)
+		newUser := model.User{Name: name, Email: email, Password: password}
+		if errRegister := s.Register(&newUser); errRegister != nil {
+			return errRegister, ""
+		}
+		// Login
+		loginUser := model.LoginUser{Input: email, Password: password}
+		errLogin, token := s.Login(&loginUser)
+		return errLogin, token
+	}
+	// Login -> Create token
+	token, errCreate := middleware.CreateToken(user.Id)
+	if errCreate != nil {
+		return errCreate, ""
+	}
+	return nil, token
 }

@@ -26,6 +26,7 @@ localhost:8080
 - [gin](https://github.com/gin-gonic/gin)
 - [validator](https://github.com/go-playground/validator)
 - [jwt](https://github.com/golang-jwt/jwt)
+- [OAuth2](https://github.com/golang/oauth2)
 - [excelize](https://github.com/qax-os/excelize)
 - [testify](https://github.com/stretchr/testify)
 - [gomock](https://github.com/golang/mock)
@@ -36,6 +37,7 @@ localhost:8080
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [TablePlus](https://tableplus.com/)
 - [Postman](https://www.postman.com/downloads/)
+- [bcrypt](https://bcrypt-generator.com/)
 
 [//]: # (- [migrate]&#40;https://github.com/golang-migrate/migrate&#41;)
 
@@ -50,12 +52,14 @@ localhost:6868
 
 **User**
 
-| Method | Link           | Request         | Middleware | Response | Description                                |
-|--------|----------------|-----------------|------------|----------|--------------------------------------------|
-| POST   | /user/register | Form-data, JSON |            | 201      | Create a new "user" with rolename = user   |
-| GET    | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token) |
-| GET    | /user          |                 | Auth       | 200      | Read information of a user                 |
-| PUT    | /user          | Form-data, JSON | Auth       | 200      | Update a user                              |
+| Method | Link           | Request         | Middleware | Response | Description                                                |
+|--------|----------------|-----------------|------------|----------|------------------------------------------------------------|
+| POST   | /user/register | Form-data, JSON |            | 201      | Create a new "user" with rolename = user                   |
+| GET    | /user/login    | Form-data, JSON |            | 201      | Login for the website (Create a new token)                 |
+| GET    | /auth/login    |                 |            | 307      | Redirect to /auth/callback                                 |
+| GET    | /auth/callback |                 |            | 201      | Login or Register with Google account (Create a new token) |
+| GET    | /user          |                 | Auth       | 200      | Read information of a user                                 |
+| PUT    | /user          | Form-data, JSON | Auth       | 200      | Update a user                                              |
 
 **Brand**
 

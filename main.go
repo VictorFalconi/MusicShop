@@ -10,6 +10,7 @@ import (
 func init() {
 	config.LoadEnvVirables()
 	config.ConnectDB()
+	config.InitOAuth2()
 }
 
 func main() {
