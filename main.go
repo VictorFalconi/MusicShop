@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	config.LoadEnvVirables()
+	config.LoadEnv()
 	config.ConnectDB()
 	config.InitOAuth2()
 }
