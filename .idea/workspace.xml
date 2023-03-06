@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="Update user: add Login with Google (OAuth2)">
+    <list default="true" id="6621121c-33bb-4f98-8e3d-a702b10bb2cf" name="Changes" comment="rename file">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/EnvVaribles.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/env.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +125,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update Middleware: Import CORS" />
     <MESSAGE value="Update helper: add status" />
     <MESSAGE value="Update helper, validate: respose true field in entity" />
     <MESSAGE value="Custom" />
@@ -153,7 +149,8 @@
     <MESSAGE value="Update version 2: token" />
     <MESSAGE value="Update login API: login with name || email" />
     <MESSAGE value="Update user: add Login with Google (OAuth2)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update user: add Login with Google (OAuth2)" />
+    <MESSAGE value="rename file" />
+    <option name="LAST_COMMIT_MESSAGE" value="rename file" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
