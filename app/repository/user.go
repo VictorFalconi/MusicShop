@@ -18,7 +18,7 @@ type UserRepoInterface interface {
 
 	// Middleware
 
-	GetUserFromToken(token *jwt.Token) (interface{}, error)
+	GetUserFromToken(token *jwt.Token) (*model.User, error)
 	GetRoleOfUser(user *model.User) (*model.Role, error)
 }
 
@@ -52,11 +52,11 @@ func (ur *UserRepo) Update(user *model.User) error {
 
 // Middleware
 
-func (ur *UserRepo) GetUserFromToken(token *jwt.Token) (interface{}, error) {
+func (ur *UserRepo) GetUserFromToken(token *jwt.Token) (*model.User, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	// Query User from id
-	var user model.User
-	if err := ur.db.Where("id = ?", claims["id"]).First(&user).Error; err != nil {
+	var user *model.User
+	if err := ur.db.Where("id = ?", claims["id"]).First(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
